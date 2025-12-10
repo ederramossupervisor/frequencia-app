@@ -8,96 +8,47 @@
   "theme_color": "#556B2F",
   "orientation": "portrait-primary",
   "lang": "pt-BR",
-  "categories": ["productivity", "utilities"],
   
   "icons": [
     {
       "src": "icons/icon-72x72.png",
       "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-96x96.png",
       "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-128x128.png",
       "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-144x144.png",
       "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-152x152.png",
       "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-384x384.png",
       "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  
-  "screenshots": [
-    {
-      "src": "https://via.placeholder.com/540x720/556B2F/FFFFFF?text=Controle+de+Frequ%C3%AAncia",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Tela principal do aplicativo"
-    },
-    {
-      "src": "https://via.placeholder.com/720x540/556B2F/FFFFFF?text=Gest%C3%A3o+de+Hor%C3%A1rios",
-      "sizes": "720x540",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Interface de gestão de horários"
-    }
-  ],
-  
-  "shortcuts": [
-    {
-      "name": "Nova Frequência",
-      "short_name": "Frequência",
-      "description": "Registrar horários do dia",
-      "url": "/#frequencia",
-      "icons": [{ 
-        "src": "icons/icon-96x96.png", 
-        "sizes": "96x96" 
-      }]
-    },
-    {
-      "name": "Acompanhamento",
-      "short_name": "Acomp.",
-      "description": "Registrar justificativas",
-      "url": "/#acompanhamento",
-      "icons": [{ 
-        "src": "icons/icon-96x96.png", 
-        "sizes": "96x96" 
-      }]
+      "type": "image/png"
     }
   ]
 }

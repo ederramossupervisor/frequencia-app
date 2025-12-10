@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- COLE ESTE CÓDIGO AQUI -->
-  <script>
-  // CÓDIGO DE EMERGÊNCIA - PARA O LOOPING
-  alert("Vamos parar o looping primeiro!");
   
-  // Desliga temporariamente o sistema de instalação
-  if (navigator.serviceWorker) {
-    navigator.serviceWorker.getRegistrations().then(function(lista) {
-      lista.forEach(function(item) {
-        item.unregister();
-        console.log("Sistema de instalação desligado");
-      });
-    });
-  }
-  </script>
-  
-  <!-- O RESTO DO SEU CÓDIGO CONTINUA AQUI -->
   <meta charset="UTF-8">
   ...
     <meta charset="UTF-8">

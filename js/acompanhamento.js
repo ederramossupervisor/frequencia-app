@@ -487,31 +487,63 @@ async function salvarJustificativa() {
             throw new Error('Informe horário início e fim');
         }
         
-        // Extrai dia da data
-        const dataObj = new Date(dataJustificativaInput.value);
-        const dia = dataObj.getDate();
+        // CORREÇÃO CRÍTICA: Extrai dia corretamente da data
+        const dataInput = dataJustificativaInput.value; // Formato: YYYY-MM-DD
+        console.log('📅 Data input (YYYY-MM-DD):', dataInput);
         
-        console.log('📊 Dados coletados:', {
-            data: dataJustificativaInput.value,
-            mes: mesSelect.value,
-            dia: dia,
-            codigo: codigoSelect.value,
-            horaInicio: horaInicioInput.value,
-            horaFim: horaFimInput.value,
-            fezAlmoco: fezAlmocoCheckbox?.checked || false,
-            observacao: observacaoTextarea?.value || ''
+        // Divide a string "YYYY-MM-DD"
+        const partes = dataInput.split('-');
+        
+        if (partes.length !== 3) {
+            throw new Error('Formato de data inválido. Use DD/MM/AAAA');
+        }
+        
+        const ano = parseInt(partes[0]);
+        const mesNumero = parseInt(partes[1]); // 1-12
+        const dia = parseInt(partes[2]); // 1-31
+        
+        console.log('📅 Partes extraídas:', { ano, mesNumero, dia });
+        
+        // Valida o dia
+        if (dia < 1 || dia > 31) {
+            throw new Error('Dia inválido. Deve ser entre 1 e 31');
+        }
+        
+        // Verifica se o mês selecionado corresponde ao mês da data
+        const mesesNumeros = {
+            'JANEIRO': 1, 'FEVEREIRO': 2, 'MARÇO': 3, 'ABRIL': 4,
+            'MAIO': 5, 'JUNHO': 6, 'JULHO': 7, 'AGOSTO': 8,
+            'SETEMBRO': 9, 'OUTUBRO': 10, 'NOVEMBRO': 11, 'DEZEMBRO': 12
+        };
+        
+        const mesSelecionado = mesSelect.value;
+        const mesNumeroSelecionado = mesesNumeros[mesSelecionado];
+        
+        console.log('📅 Comparação mês:', {
+            mesSelecionado,
+            mesNumeroSelecionado,
+            mesNumeroData: mesNumero
         });
+        
+        // Aviso se meses não coincidem (mas não impede o salvamento)
+        if (mesNumeroSelecionado !== mesNumero) {
+            console.warn('⚠️ Atenção: O mês da data não corresponde ao mês selecionado');
+            if (!confirm(`Atenção: A data é ${dia}/${mesNumero}/${ano} mas você selecionou o mês ${mesSelecionado}. Deseja continuar?`)) {
+                return { success: false, message: 'Operação cancelada pelo usuário' };
+            }
+        }
         
         // Calcula horas líquidas
         calcularHorasJustificativa();
         const horasLiquidas = document.getElementById('horasLiquidas')?.textContent || "00:00";
         
-        // Prepara dados
+        // Prepara dados para envio
         const dados = {
             tipo: 'justificativa',
-            data: dataJustificativaInput.value,
-            mes: mesSelect.value,
-            dia: dia,
+            data: dataInput, // Envia como YYYY-MM-DD
+            dataJustificativa: dataInput, // Campo adicional para o Apps Script
+            mes: mesSelecionado,
+            dia: dia, // Envia o dia como número (1-31)
             codigo: codigoSelect.value,
             horaInicio: horaInicioInput.value,
             horaFim: horaFimInput.value,
@@ -520,7 +552,7 @@ async function salvarJustificativa() {
             observacao: observacaoTextarea?.value || ''
         };
         
-        console.log('📦 Dados finalizados:', dados);
+        console.log('📦 Dados preparados para envio:', dados);
         
         // Desabilita botão durante envio
         const btn = document.getElementById('btnSalvarJustificativa');
@@ -531,6 +563,7 @@ async function salvarJustificativa() {
         }
         
         // Envia para API
+        console.log('📤 Enviando para API...');
         const resultado = await salvarJustificativaAPI(dados);
         
         console.log('📥 Resultado da API:', resultado);
@@ -542,11 +575,12 @@ async function salvarJustificativa() {
         }
         
         if (resultado && resultado.success) {
+            console.log('✅ Sucesso! Mostrando notificação...');
             mostrarNotificacao('Justificativa salva com sucesso!', 'success');
             limparJustificativa();
             atualizarEstatisticas();
         } else {
-            const erroMsg = resultado?.error || 'Erro desconhecido';
+            const erroMsg = resultado?.error || resultado?.message || 'Erro desconhecido';
             console.log('❌ Erro da API:', erroMsg);
             mostrarNotificacao(`Erro: ${erroMsg}`, 'error');
         }
@@ -564,7 +598,11 @@ async function salvarJustificativa() {
         }
         
         mostrarNotificacao(`Erro: ${error.message}`, 'error');
-        return { success: false, error: error.message };
+        return { 
+            success: false, 
+            error: error.message,
+            message: error.message 
+        };
     }
 }
 

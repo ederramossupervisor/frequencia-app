@@ -210,5 +210,24 @@ function checkForUpdates() {
 // VERIFICA A CADA 5 MINUTOS
 setInterval(checkForUpdates, 5 * 60 * 1000);
 </script>
+<script>
+// SE É ANDROID, usa SW que NÃO cacheia
+if (/android/i.test(navigator.userAgent)) {
+  if (navigator.serviceWorker) {
+    // Remove SWs antigos
+    navigator.serviceWorker.getRegistrations()
+      .then(regs => regs.forEach(reg => reg.unregister()))
+      .then(() => {
+        // Registra SW simples
+        navigator.serviceWorker.register('sw-simple.js');
+        console.log('📱 SW simples registrado para Android');
+        // Recarrega se já estiver em PWA
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+          setTimeout(() => location.reload(), 500);
+        }
+      });
+  }
+}
+</script>    
 </body>
 </html>

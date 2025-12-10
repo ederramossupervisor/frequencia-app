@@ -1,4 +1,4 @@
-// FREQUENCIA.JS - VERSÃO SIMPLIFICADA
+// FREQUENCIA.JS - VERSÃO SIMPLIFICADA E CORRIGIDA
 let frequenciaState = {
     mesAtual: '',
     diaAtual: 1
@@ -185,7 +185,7 @@ function carregarInterfaceFrequencia() {
                     <div>
                         <strong>Precisa justificar horários?</strong>
                         <p>Use a aba <strong>Acompanhamento</strong> para registrar justificativas, códigos e observações.</p>
-                        <button class="btn btn-sm btn-outline-info mt-2" onclick="mudarParaAba('acompanhamento')">
+                        <button class="btn btn-sm btn-outline-info mt-2" onclick="window.mudarParaAba ? mudarParaAba('acompanhamento') : console.log('Função não disponível')">
                             <i class="fas fa-external-link-alt"></i>
                             Ir para Acompanhamento
                         </button>
@@ -339,7 +339,7 @@ function mostrarMensagemConfiguracao() {
                     <i class="fas fa-exclamation-triangle"></i>
                     <p>Para usar a aba de Frequência, configure o ID da sua planilha.</p>
                 </div>
-                <button class="btn btn-primary btn-block mt-3" onclick="mudarParaAba('configuracoes')">
+                <button class="btn btn-primary btn-block mt-3" onclick="window.mudarParaAba ? mudarParaAba('configuracoes') : console.log('Função não disponível')">
                     <i class="fas fa-cog"></i>
                     Ir para Configurações
                 </button>
@@ -349,4 +349,7 @@ function mostrarMensagemConfiguracao() {
 }
 
 // Exportar para uso global
-window.initFrequencia = initFrequencia;
+if (typeof window !== 'undefined') {
+    window.initFrequencia = initFrequencia;
+}
+// FIM DO ARQUIVO - NADA MAIS AQUI

@@ -346,11 +346,50 @@ async function salvarFrequencia() {
     }
 }
 
+// NO FINAL DO ARQUIVO frequencia.js (substitua a função existente salvarFrequenciaAPI)
 async function salvarFrequenciaAPI(dados) {
-    // Esta função será implementada no api.js
-    // Por enquanto, retorna sucesso simulado
-    return { success: true, message: 'Dados salvos (simulado)' };
+    try {
+        console.log('📤 Enviando frequência:', dados);
+        
+        // Carrega configurações do usuário
+        const config = carregarConfiguracoes();
+        
+        if (!config.sheetIdFrequencia) {
+            throw new Error('ID da planilha de frequência não configurado');
+        }
+        
+        // Prepara dados para envio
+        const dadosEnvio = {
+            operation: 'saveFrequencia',
+            sheetIdFrequencia: config.sheetIdFrequencia,
+            userId: 'usuario_' + Date.now(),
+            month: dados.mes,
+            day: dados.dia,
+            timestamp: new Date().toISOString(),
+            entradaManha: formatarHora(dados.entradaManha),
+            saidaManha: formatarHora(dados.saidaManha),
+            entradaTarde: formatarHora(dados.entradaTarde),
+            saidaTarde: formatarHora(dados.saidaTarde)
+        };
+        
+        console.log('📦 Dados preparados:', dadosEnvio);
+        
+        // Envia para o Apps Script
+        const resultado = await enviarParaAppsScript(dadosEnvio);
+        
+        console.log('📥 Resultado do envio:', resultado);
+        
+        return resultado;
+        
+    } catch (error) {
+        console.error('❌ Erro ao salvar frequência:', error);
+        return {
+            success: false,
+            error: error.message
+        };
+    }
 }
+
 
 function mostrarMensagemConfiguracao() {
     return `

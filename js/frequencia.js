@@ -1,11 +1,11 @@
-// FREQUENCIA.JS - VERSÃO SIMPLIFICADA E CORRIGIDA
+// FREQUENCIA.JS - VERSÃO COMPLETA E CORRIGIDA
 let frequenciaState = {
     mesAtual: '',
     diaAtual: 1
 };
 
 function initFrequencia() {
-    console.log('Inicializando aba Frequência (simplificada)...');
+    console.log('Inicializando aba Frequência...');
     
     frequenciaState.mesAtual = obterMesAtual();
     frequenciaState.diaAtual = obterDiaAtual();
@@ -200,22 +200,41 @@ function carregarInterfaceFrequencia() {
 
 function configurarEventListenersFrequencia() {
     // Seletores de data
-    document.getElementById('selectMes')?.addEventListener('change', (e) => {
-        frequenciaState.mesAtual = e.target.value;
-    });
+    const selectMes = document.getElementById('selectMes');
+    const selectDia = document.getElementById('selectDia');
     
-    document.getElementById('selectDia')?.addEventListener('change', (e) => {
-        frequenciaState.diaAtual = parseInt(e.target.value);
-    });
+    if (selectMes) {
+        selectMes.addEventListener('change', (e) => {
+            frequenciaState.mesAtual = e.target.value;
+        });
+    }
+    
+    if (selectDia) {
+        selectDia.addEventListener('change', (e) => {
+            frequenciaState.diaAtual = parseInt(e.target.value);
+        });
+    }
     
     // Campos de hora
-    ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'].forEach(id => {
-        document.getElementById(id)?.addEventListener('change', calcularHoras);
+    const camposHora = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
+    camposHora.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) {
+            campo.addEventListener('change', calcularHoras);
+        }
     });
     
     // Botões
-    document.getElementById('btnLimpar')?.addEventListener('click', limparFrequencia);
-    document.getElementById('btnSalvarFrequencia')?.addEventListener('click', salvarFrequencia);
+    const btnLimpar = document.getElementById('btnLimpar');
+    const btnSalvar = document.getElementById('btnSalvarFrequencia');
+    
+    if (btnLimpar) {
+        btnLimpar.addEventListener('click', limparFrequencia);
+    }
+    
+    if (btnSalvar) {
+        btnSalvar.addEventListener('click', salvarFrequencia);
+    }
 }
 
 function calcularHoras() {
@@ -256,14 +275,19 @@ function calcularHoras() {
     }
     
     // Atualiza display
-    document.getElementById('horasManha')?.textContent = horasManha;
-    document.getElementById('horasTarde')?.textContent = horasTarde;
-    document.getElementById('horasTotal')?.textContent = horasTotal;
+    const horasManhaEl = document.getElementById('horasManha');
+    const horasTardeEl = document.getElementById('horasTarde');
+    const horasTotalEl = document.getElementById('horasTotal');
+    
+    if (horasManhaEl) horasManhaEl.textContent = horasManha;
+    if (horasTardeEl) horasTardeEl.textContent = horasTarde;
+    if (horasTotalEl) horasTotalEl.textContent = horasTotal;
 }
 
 function limparFrequencia() {
     if (confirm('Limpar todos os horários?')) {
-        ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'].forEach(id => {
+        const campos = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
+        campos.forEach(id => {
             const campo = document.getElementById(id);
             if (campo) campo.value = '';
         });
@@ -348,7 +372,7 @@ function mostrarMensagemConfiguracao() {
     `;
 }
 
-// Exportar para uso global
+// Exportar para uso global - APENAS ESTA LINHA NO FINAL
 if (typeof window !== 'undefined') {
     window.initFrequencia = initFrequencia;
 }

@@ -150,5 +150,61 @@
             });
         }
     </script>
+    <script>
+// DETECTA E ATUALIZA SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => {
+        console.log('✅ Service Worker registrado:', registration);
+        
+        // VERIFICA ATUALIZAÇÕES A CADA CARREGAMENTO
+        registration.addEventListener('updatefound', () => {
+          console.log('🔄 Nova versão do Service Worker encontrada!');
+          const newWorker = registration.installing;
+          
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed') {
+              if (navigator.serviceWorker.controller) {
+                // NOVA VERSÃO DISPONÍVEL - PERGUNTA AO USUÁRIO
+                if (confirm('Nova versão disponível! Recarregar agora?')) {
+                  window.location.reload();
+                }
+              } else {
+                console.log('✅ Service Worker instalado pela primeira vez');
+              }
+            }
+          });
+        });
+      })
+      .catch(error => {
+        console.error('❌ Falha no Service Worker:', error);
+      });
+  });
+  
+  // OUVE MENSAGENS DO SERVICE WORKER
+  navigator.serviceWorker.addEventListener('message', event => {
+    if (event.data === 'update_available') {
+      console.log('🔄 Atualização disponível');
+    }
+  });
+}
+
+// FORÇA VERIFICAÇÃO DE ATUALIZAÇÃO
+function checkForUpdates() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration()
+      .then(registration => {
+        if (registration) {
+          registration.update();
+          console.log('🔍 Verificando atualizações...');
+        }
+      });
+  }
+}
+
+// VERIFICA A CADA 5 MINUTOS
+setInterval(checkForUpdates, 5 * 60 * 1000);
+</script>
 </body>
 </html>

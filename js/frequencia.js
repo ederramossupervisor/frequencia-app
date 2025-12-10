@@ -411,6 +411,198 @@ function mostrarMensagemConfiguracao() {
         </div>
     `;
 }
+function carregarInterfaceFrequencia() {
+    const container = document.getElementById('frequencia');
+    
+    if (!container) return;
+    
+    const config = verificarConfiguracoesMinimas();
+    
+    if (!config.frequenciaConfigurada) {
+        container.innerHTML = mostrarMensagemConfiguracao();
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-clock"></i>
+                    Controle Diário de Frequência
+                </h2>
+                <span class="badge badge-info">${formatarData(new Date())}</span>
+            </div>
+            <div class="card-body">
+                <!-- Seletor de Data -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        Data do Registro
+                    </label>
+                    <div class="grid grid-2 gap-2">
+                        <select class="form-control" id="selectMes">
+                            ${CONFIG.MESES.map(mes => 
+                                `<option value="${mes}" ${mes === frequenciaState.mesAtual ? 'selected' : ''}>
+                                    ${mes}
+                                </option>`
+                            ).join('')}
+                        </select>
+                        <select class="form-control" id="selectDia">
+                            ${Array.from({length: 31}, (_, i) => i + 1)
+                                .map(dia => 
+                                    `<option value="${dia}" ${dia === frequenciaState.diaAtual ? 'selected' : ''}>
+                                        ${dia.toString().padStart(2, '0')}
+                                    </option>`
+                                ).join('')}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Horários do Dia -->
+                <div class="grid grid-2 gap-3">
+                    <!-- Período da Manhã -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-sun"></i>
+                                Período da Manhã
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label" for="entradaManha">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Entrada
+                                </label>
+                                <input 
+                                    type="time" 
+                                    class="form-control" 
+                                    id="entradaManha"
+                                    value="08:00"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="saidaManha">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Saída para Almoço
+                                </label>
+                                <input 
+                                    type="time" 
+                                    class="form-control" 
+                                    id="saidaManha"
+                                    value="12:00"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Período da Tarde -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-moon"></i>
+                                Período da Tarde
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label" for="entradaTarde">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Retorno do Almoço
+                                </label>
+                                <input 
+                                    type="time" 
+                                    class="form-control" 
+                                    id="entradaTarde"
+                                    value="13:00"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="saidaTarde">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Saída
+                                </label>
+                                <input 
+                                    type="time" 
+                                    class="form-control" 
+                                    id="saidaTarde"
+                                    value="17:00"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cálculo de Horas -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calculator"></i>
+                            Resumo do Dia
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-3 text-center">
+                            <div>
+                                <div class="stat-number" id="horasManha">04:00</div>
+                                <small class="text-muted">Manhã</small>
+                            </div>
+                            <div>
+                                <div class="stat-number" id="horasTarde">04:00</div>
+                                <small class="text-muted">Tarde</small>
+                            </div>
+                            <div>
+                                <div class="stat-number" id="horasTotal">08:00</div>
+                                <small class="text-muted">Total</small>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-2 text-center">
+                            Considera 1 hora de almoço automaticamente
+                        </small>
+                    </div>
+                </div>
+                
+                <!-- Botões PRINCIPAIS -->
+                <div class="grid grid-2 gap-2 mt-4">
+                    <button class="btn btn-secondary" id="btnLimpar">
+                        <i class="fas fa-eraser"></i>
+                        Limpar
+                    </button>
+                    <button class="btn btn-primary" id="btnSalvarFrequencia">
+                        <i class="fas fa-save"></i>
+                        Salvar Frequência
+                    </button>
+                </div>
+                
+                <!-- Botão para ABRIR PLANILHA -->
+                <div class="mt-3">
+                    <button class="btn btn-outline-success btn-block" id="btnAbrirPlanilhaFrequencia">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Minha Planilha de Frequência
+                    </button>
+                    <small class="text-muted d-block mt-1 text-center">
+                        Abre sua planilha no Google Sheets para verificar os dados
+                    </small>
+                </div>
+                
+                <!-- Link para Justificativas -->
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Precisa justificar horários?</strong>
+                        <p>Use a aba <strong>Acompanhamento</strong> para registrar justificativas, códigos e observações.</p>
+                        <button class="btn btn-sm btn-outline-info mt-2" onclick="window.mudarParaAba ? mudarParaAba('acompanhamento') : console.log('Função não disponível')">
+                            <i class="fas fa-external-link-alt"></i>
+                            Ir para Acompanhamento
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    calcularHoras();
+}
 
 // Exportar para uso global
 if (typeof window !== 'undefined') {

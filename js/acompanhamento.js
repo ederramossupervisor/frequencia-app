@@ -1,4 +1,4 @@
-// ACOMPANHAMENTO.JS - VERSÃO COMPLETA COM JUSTIFICATIVAS (CORRIGIDA)
+// ACOMPANHAMENTO.JS - VERSÃO COMPLETA COM BOTÃO PARA ABRIR PLANILHA
 let acompanhamentoState = {
     mesAtual: '',
     dataJustificativa: formatarData(new Date())
@@ -132,7 +132,7 @@ function carregarInterfaceAcompanhamento() {
                                 Descontar 1 hora de almoço
                             </label>
                         </div>
-                        <small class="form-text text-muted">
+                        <small class="text-muted">
                             Marque se fez horário de almoço durante o período justificado
                         </small>
                     </div>
@@ -184,7 +184,7 @@ function carregarInterfaceAcompanhamento() {
                         </small>
                     </div>
                     
-                    <!-- Botões -->
+                    <!-- Botões PRINCIPAIS -->
                     <div class="grid grid-2 gap-2 mt-4">
                         <button class="btn btn-secondary" id="btnLimparJustificativa">
                             <i class="fas fa-eraser"></i>
@@ -194,6 +194,17 @@ function carregarInterfaceAcompanhamento() {
                             <i class="fas fa-save"></i>
                             Salvar Justificativa
                         </button>
+                    </div>
+                    
+                    <!-- Botão para ABRIR PLANILHA -->
+                    <div class="mt-3">
+                        <button class="btn btn-outline-success btn-block" id="btnAbrirPlanilhaAcompanhamento">
+                            <i class="fas fa-external-link-alt"></i>
+                            Abrir Minha Planilha de Acompanhamento
+                        </button>
+                        <small class="text-muted d-block mt-1 text-center">
+                            Abre sua planilha no Google Sheets para verificar os dados
+                        </small>
                     </div>
                     
                     <!-- Botão de Teste Temporário -->
@@ -340,7 +351,7 @@ function configurarEventListenersAcompanhamento() {
         });
     }
     
-    // Botões
+    // Botões principais
     const btnLimpar = document.getElementById('btnLimparJustificativa');
     if (btnLimpar) {
         btnLimpar.addEventListener('click', limparJustificativa);
@@ -349,6 +360,27 @@ function configurarEventListenersAcompanhamento() {
     const btnSalvar = document.getElementById('btnSalvarJustificativa');
     if (btnSalvar) {
         btnSalvar.addEventListener('click', salvarJustificativa);
+    }
+    
+    // Botão para abrir planilha de acompanhamento
+    const btnAbrirPlanilhaAcompanhamento = document.getElementById('btnAbrirPlanilhaAcompanhamento');
+    if (btnAbrirPlanilhaAcompanhamento) {
+        btnAbrirPlanilhaAcompanhamento.addEventListener('click', () => {
+            const config = carregarConfiguracoes();
+            
+            if (!config.sheetIdAcompanhamento) {
+                mostrarNotificacao('Configure o ID da planilha de acompanhamento primeiro', 'error');
+                mudarParaAba('configuracoes');
+                return;
+            }
+            
+            const url = `https://docs.google.com/spreadsheets/d/${config.sheetIdAcompanhamento}/edit`;
+            console.log('Abrindo planilha de acompanhamento:', url);
+            
+            window.open(url, '_blank');
+            
+            mostrarNotificacao('Abrindo sua planilha de acompanhamento...', 'info', 3000);
+        });
     }
     
     // Botão de teste
@@ -691,8 +723,7 @@ function mostrarMensagemConfiguracaoAcompanhamento() {
     `;
 }
 
-// Exportar funções - APENAS ESTA LINHA NO FINAL
+// Exportar funções
 if (typeof window !== 'undefined') {
     window.initAcompanhamento = initAcompanhamento;
 }
-// FIM DO ARQUIVO - NADA MAIS AQUI

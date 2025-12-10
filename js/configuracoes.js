@@ -198,7 +198,17 @@ function carregarInterfaceConfiguracoes() {
                             </div>
                         </div>
                     </div>
-                    
+                    // Botões para abrir SUAS planilhas configuradas
+                    <div class="grid grid-2 gap-2 mt-3">
+                        <button class="btn btn-outline-primary" id="btnAbrirMinhaFrequencia">
+                            <i class="fas fa-external-link-alt"></i>
+                            Abrir MINHA Planilha Frequência
+                        </button>
+                        <button class="btn btn-outline-primary" id="btnAbrirMinhaAcompanhamento">
+                            <i class="fas fa-external-link-alt"></i>
+                            Abrir MINHA Planilha Acompanhamento
+                        </button>
+                    </div>
                     <!-- Como obter o ID da Planilha -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -463,7 +473,32 @@ function configurarEventListenersConfiguracoes() {
     if (btnLimparBackups) {
         btnLimparBackups.addEventListener('click', limparBackupsAntigos);
     }
-    
+    // Botões para abrir planilhas configuradas
+const btnAbrirMinhaFrequencia = document.getElementById('btnAbrirMinhaFrequencia');
+if (btnAbrirMinhaFrequencia) {
+    btnAbrirMinhaFrequencia.addEventListener('click', () => {
+        const config = carregarConfiguracoes();
+        if (config.sheetIdFrequencia) {
+            window.open(`https://docs.google.com/spreadsheets/d/${config.sheetIdFrequencia}/edit`, '_blank');
+            mostrarNotificacao('Abrindo sua planilha de frequência...', 'info', 3000);
+        } else {
+            mostrarNotificacao('Configure o ID da planilha de frequência primeiro', 'error');
+        }
+    });
+}
+
+const btnAbrirMinhaAcompanhamento = document.getElementById('btnAbrirMinhaAcompanhamento');
+if (btnAbrirMinhaAcompanhamento) {
+    btnAbrirMinhaAcompanhamento.addEventListener('click', () => {
+        const config = carregarConfiguracoes();
+        if (config.sheetIdAcompanhamento) {
+            window.open(`https://docs.google.com/spreadsheets/d/${config.sheetIdAcompanhamento}/edit`, '_blank');
+            mostrarNotificacao('Abrindo sua planilha de acompanhamento...', 'info', 3000);
+        } else {
+            mostrarNotificacao('Configure o ID da planilha de acompanhamento primeiro', 'error');
+        }
+    });
+}
     // Campos de ID - processamento automático
     const idPlanilhaFrequencia = document.getElementById('idPlanilhaFrequencia');
     if (idPlanilhaFrequencia) {

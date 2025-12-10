@@ -223,6 +223,25 @@ function configurarEventListenersFrequencia() {
             campo.addEventListener('change', calcularHoras);
         }
     });
+     // Botão para abrir planilha de frequência
+    const btnAbrirPlanilhaFrequencia = document.getElementById('btnAbrirPlanilhaFrequencia');
+    if (btnAbrirPlanilhaFrequencia) {
+        btnAbrirPlanilhaFrequencia.addEventListener('click', () => {
+            const config = carregarConfiguracoes();
+            
+            if (!config.sheetIdFrequencia) {
+                mostrarNotificacao('Configure o ID da planilha de frequência primeiro', 'error');
+                mudarParaAba('configuracoes');
+                return;
+            }
+            
+            const url = `https://docs.google.com/spreadsheets/d/${config.sheetIdFrequencia}/edit`;
+            console.log('Abrindo planilha de frequência:', url);
+            
+            window.open(url, '_blank');
+            
+            mostrarNotificacao('Abrindo sua planilha de frequência...', 'info', 3000);
+        });
     
     // Botões
     const btnLimpar = document.getElementById('btnLimpar');

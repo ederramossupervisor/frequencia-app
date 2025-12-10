@@ -219,6 +219,28 @@ if (/android/i.test(navigator.userAgent)) {
       });
   }
 }
-</script>    
+</script>
+<script>
+// Registra Service Worker APENAS se for seguro
+if ('serviceWorker' in navigator) {
+  // Remove qualquer Service Worker antigo primeiro
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+    
+    // Espera 1 segundo e registra o novo
+    setTimeout(function() {
+      navigator.serviceWorker.register('sw-pwa.js')
+        .then(function(registration) {
+          console.log('✅ PWA Service Worker registrado:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('❌ Service Worker falhou:', error);
+        });
+    }, 1000);
+  });
+}
+</script>
 </body>
 </html>

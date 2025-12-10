@@ -76,15 +76,18 @@ function carregarInterfaceAcompanhamento() {
                             <i class="fas fa-code"></i>
                             Código da Justificativa
                         </label>
-                        <select class="form-control" id="codigoJustificativa">
+                        <select class="form-control" id="codigoJustificativa" required>
                             <option value="">Selecione um código...</option>
                             ${CONFIG.CODIGOS_JUSTIFICATIVA.map(item => 
-                                `<option value="${item.codigo}">
+                                `<option value="${item.codigo}" data-desc="${item.descricao}">
                                     ${item.codigo} - ${item.descricao}
                                 </option>`
                             ).join('')}
                         </select>
                         <small class="form-text">Código que será salvo na coluna I</small>
+                        <div id="codigoHelp" class="text-danger" style="display: none; font-size: 0.9rem; margin-top: 5px;">
+                            ⚠️ Por favor, selecione um código
+                        </div>
                     </div>
                     
                     <!-- Horários da Justificativa -->
@@ -190,6 +193,14 @@ function carregarInterfaceAcompanhamento() {
                         <button class="btn btn-primary" id="btnSalvarJustificativa">
                             <i class="fas fa-save"></i>
                             Salvar Justificativa
+                        </button>
+                    </div>
+                    
+                    <!-- Botão de Teste Temporário -->
+                    <div class="mt-3">
+                        <button class="btn btn-warning btn-sm" id="btnTesteJustificativa">
+                            <i class="fas fa-vial"></i>
+                            Testar Seleção de Código
                         </button>
                     </div>
                     
@@ -313,6 +324,22 @@ function configurarEventListenersAcompanhamento() {
         fezAlmocoCheckbox.addEventListener('change', calcularHorasJustificativa);
     }
     
+    // Validação do código em tempo real
+    const codigoSelect = document.getElementById('codigoJustificativa');
+    if (codigoSelect) {
+        codigoSelect.addEventListener('change', (e) => {
+            const helpText = document.getElementById('codigoHelp');
+            if (helpText) {
+                if (!e.target.value) {
+                    helpText.style.display = 'block';
+                } else {
+                    helpText.style.display = 'none';
+                }
+            }
+            console.log('Código selecionado:', e.target.value);
+        });
+    }
+    
     // Botões
     const btnLimpar = document.getElementById('btnLimparJustificativa');
     if (btnLimpar) {
@@ -322,6 +349,23 @@ function configurarEventListenersAcompanhamento() {
     const btnSalvar = document.getElementById('btnSalvarJustificativa');
     if (btnSalvar) {
         btnSalvar.addEventListener('click', salvarJustificativa);
+    }
+    
+    // Botão de teste
+    const btnTeste = document.getElementById('btnTesteJustificativa');
+    if (btnTeste) {
+        btnTeste.addEventListener('click', () => {
+            const codigoSelect = document.getElementById('codigoJustificativa');
+            console.log('🔍 Teste - Elemento select:', codigoSelect);
+            console.log('🔍 Teste - Valor selecionado:', codigoSelect?.value);
+            console.log('🔍 Teste - Opções:', codigoSelect?.options);
+            
+            // Tenta selecionar um código automaticamente
+            if (codigoSelect && codigoSelect.options.length > 1) {
+                codigoSelect.value = codigoSelect.options[1].value;
+                console.log('✅ Código selecionado automaticamente:', codigoSelect.value);
+            }
+        });
     }
 }
 
@@ -403,24 +447,60 @@ function limparJustificativa() {
 
 async function salvarJustificativa() {
     try {
-        // Coleta dados
-        const dataJustificativa = document.getElementById('dataJustificativa')?.value;
-        const mes = document.getElementById('selectMesJustificativa')?.value;
-        const codigo = document.getElementById('codigoJustificativa')?.value;
-        const horaInicio = document.getElementById('horaInicioJustificativa')?.value;
-        const horaFim = document.getElementById('horaFimJustificativa')?.value;
-        const fezAlmoco = document.getElementById('fezAlmoco')?.checked;
-        const observacao = document.getElementById('observacaoJustificativa')?.value;
+        console.log('🔄 Iniciando salvamento de justificativa...');
+        
+        // Coleta dados COM CHECKS
+        const dataJustificativaInput = document.getElementById('dataJustificativa');
+        const mesSelect = document.getElementById('selectMesJustificativa');
+        const codigoSelect = document.getElementById('codigoJustificativa');
+        const horaInicioInput = document.getElementById('horaInicioJustificativa');
+        const horaFimInput = document.getElementById('horaFimJustificativa');
+        const fezAlmocoCheckbox = document.getElementById('fezAlmoco');
+        const observacaoTextarea = document.getElementById('observacaoJustificativa');
+        
+        console.log('🔍 Elementos encontrados:', {
+            dataJustificativa: !!dataJustificativaInput,
+            mesSelect: !!mesSelect,
+            codigoSelect: !!codigoSelect,
+            horaInicio: !!horaInicioInput,
+            horaFim: !!horaFimInput,
+            fezAlmoco: !!fezAlmocoCheckbox,
+            observacao: !!observacaoTextarea
+        });
         
         // Validações
-        if (!dataJustificativa) throw new Error('Informe a data da justificativa');
-        if (!mes) throw new Error('Selecione o mês');
-        if (!codigo) throw new Error('Selecione um código de justificativa');
-        if (!horaInicio || !horaFim) throw new Error('Informe horário início e fim');
+        if (!dataJustificativaInput?.value) {
+            throw new Error('Informe a data da justificativa');
+        }
+        
+        if (!mesSelect?.value) {
+            throw new Error('Selecione o mês');
+        }
+        
+        // VERIFICAÇÃO ESPECÍFICA DO CÓDIGO
+        if (!codigoSelect?.value || codigoSelect.value === '') {
+            console.log('❌ Código selecionado:', codigoSelect?.value);
+            throw new Error('Selecione um código de justificativa');
+        }
+        
+        if (!horaInicioInput?.value || !horaFimInput?.value) {
+            throw new Error('Informe horário início e fim');
+        }
         
         // Extrai dia da data
-        const dataObj = new Date(dataJustificativa);
+        const dataObj = new Date(dataJustificativaInput.value);
         const dia = dataObj.getDate();
+        
+        console.log('📊 Dados coletados:', {
+            data: dataJustificativaInput.value,
+            mes: mesSelect.value,
+            dia: dia,
+            codigo: codigoSelect.value,
+            horaInicio: horaInicioInput.value,
+            horaFim: horaFimInput.value,
+            fezAlmoco: fezAlmocoCheckbox?.checked || false,
+            observacao: observacaoTextarea?.value || ''
+        });
         
         // Calcula horas líquidas
         calcularHorasJustificativa();
@@ -429,16 +509,18 @@ async function salvarJustificativa() {
         // Prepara dados
         const dados = {
             tipo: 'justificativa',
-            data: dataJustificativa,
-            mes: mes,
+            data: dataJustificativaInput.value,
+            mes: mesSelect.value,
             dia: dia,
-            codigo: codigo,
-            horaInicio: horaInicio,
-            horaFim: horaFim,
-            fezAlmoco: fezAlmoco,
+            codigo: codigoSelect.value,
+            horaInicio: horaInicioInput.value,
+            horaFim: horaFimInput.value,
+            fezAlmoco: fezAlmocoCheckbox?.checked || false,
             horasLiquidas: horasLiquidas,
-            observacao: observacao || ''
+            observacao: observacaoTextarea?.value || ''
         };
+        
+        console.log('📦 Dados finalizados:', dados);
         
         // Desabilita botão durante envio
         const btn = document.getElementById('btnSalvarJustificativa');
@@ -451,36 +533,95 @@ async function salvarJustificativa() {
         // Envia para API
         const resultado = await salvarJustificativaAPI(dados);
         
+        console.log('📥 Resultado da API:', resultado);
+        
         // Reabilita botão
         if (btn) {
             btn.innerHTML = textoOriginal;
             btn.disabled = false;
         }
         
-        if (resultado.success) {
+        if (resultado && resultado.success) {
             mostrarNotificacao('Justificativa salva com sucesso!', 'success');
             limparJustificativa();
             atualizarEstatisticas();
+        } else {
+            const erroMsg = resultado?.error || 'Erro desconhecido';
+            console.log('❌ Erro da API:', erroMsg);
+            mostrarNotificacao(`Erro: ${erroMsg}`, 'error');
         }
         
         return resultado;
         
     } catch (error) {
-        console.error('Erro ao salvar justificativa:', error);
+        console.error('❌ Erro ao salvar justificativa:', error);
+        
+        // Reabilita botão em caso de erro
+        const btn = document.getElementById('btnSalvarJustificativa');
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-save"></i> Salvar Justificativa';
+            btn.disabled = false;
+        }
+        
         mostrarNotificacao(`Erro: ${error.message}`, 'error');
         return { success: false, error: error.message };
     }
 }
 
 async function salvarJustificativaAPI(dados) {
-    // Esta função será implementada no api.js
-    // Por enquanto, retorna sucesso simulado
-    console.log('Dados da justificativa:', dados);
-    return { 
-        success: true, 
-        message: 'Justificativa salva (simulado)',
-        dados: dados 
-    };
+    try {
+        console.log('📤 Iniciando envio de justificativa para API...');
+        console.log('📦 Dados recebidos:', dados);
+        
+        // Carrega configurações do usuário
+        const config = carregarConfiguracoes();
+        console.log('⚙️ Configurações carregadas:', config);
+        
+        if (!config.sheetIdFrequencia || !config.sheetIdAcompanhamento) {
+            throw new Error('Configure ambas as planilhas');
+        }
+        
+        // Verifica se a função enviarParaAppsScript está disponível
+        if (typeof enviarParaAppsScript === 'undefined') {
+            console.error('❌ FUNÇÃO CRÍTICA NÃO DISPONÍVEL: enviarParaAppsScript');
+            throw new Error('Função de envio não disponível');
+        }
+        
+        console.log('✅ Função enviarParaAppsScript disponível');
+        
+        // Prepara dados para envio - usando saveJustificativaCompleta
+        const dadosEnvio = {
+            operation: 'saveJustificativaCompleta',
+            sheetIdFrequencia: config.sheetIdFrequencia,
+            sheetIdAcompanhamento: config.sheetIdAcompanhamento,
+            month: dados.mes.toUpperCase(),
+            day: dados.dia,
+            dataJustificativa: dados.data,
+            codigo: dados.codigo,
+            horaInicio: formatarHora(dados.horaInicio) || '08:00',
+            horaFim: formatarHora(dados.horaFim) || '17:00',
+            fezAlmoco: dados.fezAlmoco || false,
+            horasLiquidas: dados.horasLiquidas || '08:00',
+            observacao: dados.observacao || '',
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('📤 Dados para envio:', dadosEnvio);
+        
+        // Envia para o Apps Script
+        const resultado = await enviarParaAppsScript(dadosEnvio);
+        
+        console.log('📥 Resultado do envio:', resultado);
+        
+        return resultado;
+        
+    } catch (error) {
+        console.error('❌ Erro ao salvar justificativa:', error);
+        return {
+            success: false,
+            error: error.message
+        };
+    }
 }
 
 function atualizarEstatisticas() {

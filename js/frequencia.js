@@ -236,43 +236,6 @@ function configurarEventListenersFrequencia() {
         btnSalvar.addEventListener('click', salvarFrequencia);
     }
 }
- // Botão de teste manual
-    const btnTesteManual = document.getElementById('btnTesteManual');
-    if (btnTesteManual) {
-        btnTesteManual.addEventListener('click', async () => {
-            console.log('🧪 Iniciando teste manual...');
-            try {
-                const config = carregarConfiguracoes();
-                
-                const dadosTeste = {
-                    operation: 'saveFrequencia',
-                    sheetIdFrequencia: config.sheetIdFrequencia,
-                    month: 'JANEIRO',
-                    day: 15,
-                    entradaManha: '08:00',
-                    saidaManha: '12:00',
-                    entradaTarde: '13:00',
-                    saidaTarde: '17:00',
-                    timestamp: new Date().toISOString()
-                };
-                
-                console.log('📤 Enviando teste manual:', dadosTeste);
-                const resultado = await enviarParaAppsScript(dadosTeste);
-                console.log('📥 Resultado teste:', resultado);
-                
-                if (resultado.success) {
-                    mostrarNotificacao('✅ Teste manual funcionou!', 'success');
-                } else {
-                    mostrarNotificacao('❌ Teste manual falhou', 'error');
-                }
-                
-            } catch (error) {
-                console.error('❌ Erro no teste manual:', error);
-                mostrarNotificacao(`❌ Erro: ${error.message}`, 'error');
-            }
-        });
-    }
-}
 
 function calcularHoras() {
     const entradaManha = document.getElementById('entradaManha')?.value;
@@ -362,6 +325,28 @@ async function salvarFrequencia() {
             throw new Error('Preencha pelo menos um horário');
         }
         
+        // Carrega configurações
+        const config = carregarConfiguracoes();
+        
+        if (!config.sheetIdFrequencia) {
+            throw new Error('ID da planilha não configurado');
+        }
+        
+        // Prepara dados para envio
+        const dadosEnvio = {
+            operation: 'saveFrequencia',
+            sheetIdFrequencia: config.sheetIdFrequencia,
+            month: mes,
+            day: parseInt(dia),
+            entradaManha: formatarHora(dados.entradaManha),
+            saidaManha: formatarHora(dados.saidaManha),
+            entradaTarde: formatarHora(dados.entradaTarde),
+            saidaTarde: formatarHora(dados.saidaTarde),
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('📤 Dados para envio:', dadosEnvio);
+        
         const btn = document.getElementById('btnSalvarFrequencia');
         const textoOriginal = btn?.innerHTML;
         
@@ -371,22 +356,23 @@ async function salvarFrequencia() {
             btn.disabled = true;
         }
         
-        console.log('📤 Chamando API...');
-        const resultado = await salvarFrequenciaAPI(dados);
+        console.log('📤 Enviando para Apps Script...');
+        const resultado = await enviarParaAppsScript(dadosEnvio);
         
-        console.log('📥 Resultado da API:', resultado);
+        console.log('📥 Resultado:', resultado);
         
         if (btn) {
             btn.innerHTML = textoOriginal;
             btn.disabled = false;
         }
         
-        if (resultado.success) {
+        if (resultado && resultado.success) {
             console.log('✅ Sucesso! Mostrando notificação...');
             mostrarNotificacao('Frequência salva com sucesso!', 'success');
         } else {
-            console.log('❌ Erro da API:', resultado.error);
-            mostrarNotificacao(`Erro: ${resultado.error || 'Erro desconhecido'}`, 'error');
+            const erroMsg = resultado?.error || 'Erro desconhecido';
+            console.log('❌ Erro da API:', erroMsg);
+            mostrarNotificacao(`Erro: ${erroMsg}`, 'error');
         }
         
         return resultado;
@@ -394,54 +380,17 @@ async function salvarFrequencia() {
     } catch (error) {
         console.error('❌ Erro ao salvar frequência:', error);
         mostrarNotificacao(`Erro: ${error.message}`, 'error');
+        
+        // Reabilita botão em caso de erro
+        const btn = document.getElementById('btnSalvarFrequencia');
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-save"></i> Salvar Frequência';
+            btn.disabled = false;
+        }
+        
         return { success: false, error: error.message };
     }
 }
-
-// NO FINAL DO ARQUIVO frequencia.js (substitua a função existente salvarFrequenciaAPI)
-async function salvarFrequenciaAPI(dados) {
-    try {
-        console.log('📤 Enviando frequência:', dados);
-        
-        // Carrega configurações do usuário
-        const config = carregarConfiguracoes();
-        
-        if (!config.sheetIdFrequencia) {
-            throw new Error('ID da planilha de frequência não configurado');
-        }
-        
-        // Prepara dados para envio
-        const dadosEnvio = {
-            operation: 'saveFrequencia',
-            sheetIdFrequencia: config.sheetIdFrequencia,
-            userId: 'usuario_' + Date.now(),
-            month: dados.mes,
-            day: dados.dia,
-            timestamp: new Date().toISOString(),
-            entradaManha: formatarHora(dados.entradaManha),
-            saidaManha: formatarHora(dados.saidaManha),
-            entradaTarde: formatarHora(dados.entradaTarde),
-            saidaTarde: formatarHora(dados.saidaTarde)
-        };
-        
-        console.log('📦 Dados preparados:', dadosEnvio);
-        
-        // Envia para o Apps Script
-        const resultado = await enviarParaAppsScript(dadosEnvio);
-        
-        console.log('📥 Resultado do envio:', resultado);
-        
-        return resultado;
-        
-    } catch (error) {
-        console.error('❌ Erro ao salvar frequência:', error);
-        return {
-            success: false,
-            error: error.message
-        };
-    }
-}
-
 
 function mostrarMensagemConfiguracao() {
     return `
@@ -463,56 +412,7 @@ function mostrarMensagemConfiguracao() {
     `;
 }
 
-// Exportar para uso global - APENAS ESTA LINHA NO FINAL
+// Exportar para uso global
 if (typeof window !== 'undefined') {
     window.initFrequencia = initFrequencia;
-}
-// FIM DO ARQUIVO - NADA MAIS AQUI
-function carregarInterfaceFrequencia() {
-    const container = document.getElementById('frequencia');
-    
-    if (!container) return;
-    
-    const config = verificarConfiguracoesMinimas();
-    
-    if (!config.frequenciaConfigurada) {
-        container.innerHTML = mostrarMensagemConfiguracao();
-        return;
-    }
-    
-    container.innerHTML = `
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <i class="fas fa-clock"></i>
-                    Controle Diário de Frequência
-                </h2>
-                <span class="badge badge-info">${formatarData(new Date())}</span>
-            </div>
-            <div class="card-body">
-                <!-- ... resto do código existente ... -->
-                
-                <!-- Botões -->
-                <div class="grid grid-3 gap-2 mt-4">
-                    <button class="btn btn-secondary" id="btnLimpar">
-                        <i class="fas fa-eraser"></i>
-                        Limpar
-                    </button>
-                    <button class="btn btn-primary" id="btnSalvarFrequencia">
-                        <i class="fas fa-save"></i>
-                        Salvar Frequência
-                    </button>
-                    <!-- BOTÃO DE TESTE TEMPORÁRIO -->
-                    <button class="btn btn-warning" id="btnTesteManual">
-                        <i class="fas fa-vial"></i>
-                        Testar Envio
-                    </button>
-                </div>
-                
-                <!-- ... resto do código existente ... -->
-            </div>
-        </div>
-    `;
-    
-    calcularHoras();
 }

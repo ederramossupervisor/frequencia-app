@@ -7,7 +7,14 @@ const AppState = {
     online: navigator.onLine,
     carregando: false
 };
-
+function mudarParaAba(aba) {
+    const botoes = document.querySelectorAll('.tab-btn');
+    botoes.forEach(btn => {
+        if (btn.dataset.tab === aba) {
+            btn.click();
+        }
+    });
+}
 /**
  * Inicializa o aplicativo
  */

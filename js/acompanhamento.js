@@ -1,4 +1,4 @@
-// ACOMPANHAMENTO.JS - VERSÃO COMPLETA COM JUSTIFICATIVAS
+// ACOMPANHAMENTO.JS - VERSÃO COMPLETA COM JUSTIFICATIVAS (CORRIGIDA)
 let acompanhamentoState = {
     mesAtual: '',
     dataJustificativa: formatarData(new Date())
@@ -301,15 +301,28 @@ function configurarEventListenersAcompanhamento() {
     
     // Horários
     ['horaInicioJustificativa', 'horaFimJustificativa'].forEach(id => {
-        document.getElementById(id)?.addEventListener('change', calcularHorasJustificativa);
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', calcularHorasJustificativa);
+        }
     });
     
     // Checkbox almoço
-    document.getElementById('fezAlmoco')?.addEventListener('change', calcularHorasJustificativa);
+    const fezAlmocoCheckbox = document.getElementById('fezAlmoco');
+    if (fezAlmocoCheckbox) {
+        fezAlmocoCheckbox.addEventListener('change', calcularHorasJustificativa);
+    }
     
     // Botões
-    document.getElementById('btnLimparJustificativa')?.addEventListener('click', limparJustificativa);
-    document.getElementById('btnSalvarJustificativa')?.addEventListener('click', salvarJustificativa);
+    const btnLimpar = document.getElementById('btnLimparJustificativa');
+    if (btnLimpar) {
+        btnLimpar.addEventListener('click', limparJustificativa);
+    }
+    
+    const btnSalvar = document.getElementById('btnSalvarJustificativa');
+    if (btnSalvar) {
+        btnSalvar.addEventListener('click', salvarJustificativa);
+    }
 }
 
 function calcularHorasJustificativa() {
@@ -359,19 +372,31 @@ function calcularHorasJustificativa() {
     }
     
     // Atualiza display
-    document.getElementById('horasBrutas')?.textContent = horasBrutas;
-    document.getElementById('descontoAlmoco')?.textContent = descontoAlmoco;
-    document.getElementById('horasLiquidas')?.textContent = horasLiquidas;
-    document.getElementById('textoCalculo')?.textContent = textoCalculo;
+    const horasBrutasEl = document.getElementById('horasBrutas');
+    const descontoAlmocoEl = document.getElementById('descontoAlmoco');
+    const horasLiquidasEl = document.getElementById('horasLiquidas');
+    const textoCalculoEl = document.getElementById('textoCalculo');
+    
+    if (horasBrutasEl) horasBrutasEl.textContent = horasBrutas;
+    if (descontoAlmocoEl) descontoAlmocoEl.textContent = descontoAlmoco;
+    if (horasLiquidasEl) horasLiquidasEl.textContent = horasLiquidas;
+    if (textoCalculoEl) textoCalculoEl.textContent = textoCalculo;
 }
 
 function limparJustificativa() {
     if (confirm('Limpar formulário de justificativa?')) {
-        document.getElementById('codigoJustificativa').value = '';
-        document.getElementById('horaInicioJustificativa').value = '08:00';
-        document.getElementById('horaFimJustificativa').value = '17:00';
-        document.getElementById('fezAlmoco').checked = true;
-        document.getElementById('observacaoJustificativa').value = '';
+        const codigoSelect = document.getElementById('codigoJustificativa');
+        const horaInicio = document.getElementById('horaInicioJustificativa');
+        const horaFim = document.getElementById('horaFimJustificativa');
+        const fezAlmoco = document.getElementById('fezAlmoco');
+        const observacao = document.getElementById('observacaoJustificativa');
+        
+        if (codigoSelect) codigoSelect.value = '';
+        if (horaInicio) horaInicio.value = '08:00';
+        if (horaFim) horaFim.value = '17:00';
+        if (fezAlmoco) fezAlmoco.checked = true;
+        if (observacao) observacao.value = '';
+        
         calcularHorasJustificativa();
     }
 }
@@ -478,7 +503,7 @@ function mostrarMensagemConfiguracaoAcompanhamento() {
                     <i class="fas fa-exclamation-triangle"></i>
                     <p>Para usar a aba de Acompanhamento, configure ambas as planilhas.</p>
                 </div>
-                <button class="btn btn-primary btn-block mt-3" onclick="mudarParaAba('configuracoes')">
+                <button class="btn btn-primary btn-block mt-3" onclick="window.mudarParaAba ? mudarParaAba('configuracoes') : console.log('Função não disponível')">
                     <i class="fas fa-cog"></i>
                     Ir para Configurações
                 </button>
@@ -487,5 +512,8 @@ function mostrarMensagemConfiguracaoAcompanhamento() {
     `;
 }
 
-// Exportar funções
-window.initAcompanhamento = initAcompanhamento;
+// Exportar funções - APENAS ESTA LINHA NO FINAL
+if (typeof window !== 'undefined') {
+    window.initAcompanhamento = initAcompanhamento;
+}
+// FIM DO ARQUIVO - NADA MAIS AQUI

@@ -3,7 +3,7 @@
 
 const CONFIG = {
     // URL do SEU Apps Script (você vai colocar aqui depois de publicar)
-    APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwYOUR_SCRIPT_ID/exec",
+    APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzmGiDl3KXH0WFNFPKhRxBLQ24tCQ08qJuXxBy3yDue3GFR35tZO86EB4id-AdtX4loiQ/exec",
     
     // IDs das suas planilhas templates (para os botões "Abrir Template")
     TEMPLATE_IDS: {

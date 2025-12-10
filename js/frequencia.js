@@ -350,4 +350,3 @@ function mostrarMensagemConfiguracao() {
 
 // Exportar para uso global
 window.initFrequencia = initFrequencia;
-window.mudarParaAba = mudarParaAba;

@@ -761,3 +761,66 @@ select.form-control {
     display: block;
     text-align: center;
 }
+/* ============================================
+   CORREÇÃO PARA CAMPOS DE HORA MOBILE
+   ============================================ */
+
+.mobile-time-container {
+    margin-bottom: 15px;
+}
+
+.time-simple-input {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid #B8D4A3;
+    border-radius: 10px;
+    background: #F9FBF7;
+    color: #3D5229;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    display: block !important;
+}
+
+.time-simple-input:focus {
+    outline: none;
+    border-color: #556B2F;
+    box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.2);
+    background: white;
+}
+
+.time-simple-input::placeholder {
+    color: #A5C97E;
+    opacity: 0.7;
+}
+
+/* Apenas para mobile */
+@media (max-width: 768px) {
+    .time-simple-input {
+        display: block !important;
+        height: 52px;
+        font-size: 1.3rem;
+    }
+    
+    input[type="time"] {
+        display: none !important;
+    }
+}
+
+/* Apenas para PC */
+@media (min-width: 769px) {
+    .time-simple-input {
+        display: none !important;
+    }
+    
+    input[type="time"] {
+        display: block !important;
+    }
+    
+    .mobile-time-container {
+        display: none !important;
+    }
+}

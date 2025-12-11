@@ -545,7 +545,6 @@ async function salvarJustificativa() {
             throw new Error('Selecione o mês');
         }
         // VALIDAÇÃO DA OBSERVAÇÃO (NOVO)
-const observacaoTextarea = document.getElementById('observacaoJustificativa');
 if (!observacaoTextarea?.value || observacaoTextarea.value.trim() === '') {
     // Mostra erro visual
     validarObservacao();

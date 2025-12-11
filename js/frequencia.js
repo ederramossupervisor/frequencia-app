@@ -6,7 +6,7 @@ let frequenciaState = {
 
 function initFrequencia() {
     console.log('Inicializando aba Frequência...');
-    
+    document.querySelector('#frequencia .loading')?.remove();
     frequenciaState.mesAtual = obterMesAtual();
     frequenciaState.diaAtual = obterDiaAtual();
     

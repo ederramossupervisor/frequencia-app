@@ -63,7 +63,7 @@ function carregarInterfaceFrequencia() {
                     </div>
                 </div>
                 
-                <!-- Horários do Dia -->
+                <!-- Horários do Dia - VERSÃO MODIFICADA PARA MOBILE -->
                 <div class="grid grid-2 gap-3">
                     <!-- Período da Manhã -->
                     <div class="card">
@@ -74,29 +74,76 @@ function carregarInterfaceFrequencia() {
                             </h3>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-label" for="entradaManha">
+                            <!-- Entrada Manhã (NOVO - para mobile) -->
+                            <div class="form-group time-input-group">
+                                <label class="form-label">
                                     <i class="fas fa-sign-in-alt"></i>
                                     Entrada
                                 </label>
-                                <input 
-                                    type="time" 
-                                    class="form-control" 
-                                    id="entradaManha"
-                                    value="08:00"
-                                >
+                                <div class="time-picker-container">
+                                    <div class="time-inputs">
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="entradaManhaH" 
+                                               min="0" 
+                                               max="23" 
+                                               value="08"
+                                               oninput="validarHoraFrequencia(this, 'entradaManhaM', 'entradaManha')">
+                                        <span class="time-separator">:</span>
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="entradaManhaM" 
+                                               min="0" 
+                                               max="59" 
+                                               value="00"
+                                               oninput="validarMinutoFrequencia(this, 'entradaManhaH', 'entradaManha')">
+                                        <div class="time-buttons">
+                                            <button type="button" class="time-btn" onclick="incrementarHoraFrequencia('entradaManhaH', 'entradaManha')">▲</button>
+                                            <button type="button" class="time-btn" onclick="decrementarHoraFrequencia('entradaManhaH', 'entradaManha')">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Campo original (escondido no mobile) -->
+                                <input type="time" 
+                                       class="form-control mobile-time-input" 
+                                       id="entradaManha"
+                                       value="08:00">
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" for="saidaManha">
+                            
+                            <!-- Saída Manhã (NOVO - para mobile) -->
+                            <div class="form-group time-input-group">
+                                <label class="form-label">
                                     <i class="fas fa-sign-out-alt"></i>
                                     Saída para Almoço
                                 </label>
-                                <input 
-                                    type="time" 
-                                    class="form-control" 
-                                    id="saidaManha"
-                                    value="12:00"
-                                >
+                                <div class="time-picker-container">
+                                    <div class="time-inputs">
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="saidaManhaH" 
+                                               min="0" 
+                                               max="23" 
+                                               value="12"
+                                               oninput="validarHoraFrequencia(this, 'saidaManhaM', 'saidaManha')">
+                                        <span class="time-separator">:</span>
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="saidaManhaM" 
+                                               min="0" 
+                                               max="59" 
+                                               value="00"
+                                               oninput="validarMinutoFrequencia(this, 'saidaManhaH', 'saidaManha')">
+                                        <div class="time-buttons">
+                                            <button type="button" class="time-btn" onclick="incrementarHoraFrequencia('saidaManhaH', 'saidaManha')">▲</button>
+                                            <button type="button" class="time-btn" onclick="decrementarHoraFrequencia('saidaManhaH', 'saidaManha')">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Campo original (escondido no mobile) -->
+                                <input type="time" 
+                                       class="form-control mobile-time-input" 
+                                       id="saidaManha"
+                                       value="12:00">
                             </div>
                         </div>
                     </div>
@@ -110,29 +157,76 @@ function carregarInterfaceFrequencia() {
                             </h3>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-label" for="entradaTarde">
+                            <!-- Entrada Tarde (NOVO - para mobile) -->
+                            <div class="form-group time-input-group">
+                                <label class="form-label">
                                     <i class="fas fa-sign-in-alt"></i>
                                     Retorno do Almoço
                                 </label>
-                                <input 
-                                    type="time" 
-                                    class="form-control" 
-                                    id="entradaTarde"
-                                    value="13:00"
-                                >
+                                <div class="time-picker-container">
+                                    <div class="time-inputs">
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="entradaTardeH" 
+                                               min="0" 
+                                               max="23" 
+                                               value="13"
+                                               oninput="validarHoraFrequencia(this, 'entradaTardeM', 'entradaTarde')">
+                                        <span class="time-separator">:</span>
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="entradaTardeM" 
+                                               min="0" 
+                                               max="59" 
+                                               value="00"
+                                               oninput="validarMinutoFrequencia(this, 'entradaTardeH', 'entradaTarde')">
+                                        <div class="time-buttons">
+                                            <button type="button" class="time-btn" onclick="incrementarHoraFrequencia('entradaTardeH', 'entradaTarde')">▲</button>
+                                            <button type="button" class="time-btn" onclick="decrementarHoraFrequencia('entradaTardeH', 'entradaTarde')">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Campo original (escondido no mobile) -->
+                                <input type="time" 
+                                       class="form-control mobile-time-input" 
+                                       id="entradaTarde"
+                                       value="13:00">
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" for="saidaTarde">
+                            
+                            <!-- Saída Tarde (NOVO - para mobile) -->
+                            <div class="form-group time-input-group">
+                                <label class="form-label">
                                     <i class="fas fa-sign-out-alt"></i>
                                     Saída
                                 </label>
-                                <input 
-                                    type="time" 
-                                    class="form-control" 
-                                    id="saidaTarde"
-                                    value="17:00"
-                                >
+                                <div class="time-picker-container">
+                                    <div class="time-inputs">
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="saidaTardeH" 
+                                               min="0" 
+                                               max="23" 
+                                               value="17"
+                                               oninput="validarHoraFrequencia(this, 'saidaTardeM', 'saidaTarde')">
+                                        <span class="time-separator">:</span>
+                                        <input type="number" 
+                                               class="time-segment" 
+                                               id="saidaTardeM" 
+                                               min="0" 
+                                               max="59" 
+                                               value="00"
+                                               oninput="validarMinutoFrequencia(this, 'saidaTardeH', 'saidaTarde')">
+                                        <div class="time-buttons">
+                                            <button type="button" class="time-btn" onclick="incrementarHoraFrequencia('saidaTardeH', 'saidaTarde')">▲</button>
+                                            <button type="button" class="time-btn" onclick="decrementarHoraFrequencia('saidaTardeH', 'saidaTarde')">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Campo original (escondido no mobile) -->
+                                <input type="time" 
+                                       class="form-control mobile-time-input" 
+                                       id="saidaTarde"
+                                       value="17:00">
                             </div>
                         </div>
                     </div>
@@ -204,9 +298,128 @@ function carregarInterfaceFrequencia() {
                 </div>
             </div>
         </div>
+        
+        <!-- SCRIPTS PARA O TIME PICKER DA FREQUÊNCIA -->
+        <script>
+        // Funções para o time picker da aba Frequência
+        function validarHoraFrequencia(input, minutoId, campoOriginalId) {
+            let valor = parseInt(input.value) || 0;
+            if (valor < 0) valor = 0;
+            if (valor > 23) valor = 23;
+            input.value = valor.toString().padStart(2, '0');
+            atualizarCampoTimeOriginalFrequencia(campoOriginalId);
+            calcularHorasFrequencia();
+        }
+        
+        function validarMinutoFrequencia(input, horaId, campoOriginalId) {
+            let valor = parseInt(input.value) || 0;
+            if (valor < 0) valor = 0;
+            if (valor > 59) valor = 59;
+            input.value = valor.toString().padStart(2, '0');
+            atualizarCampoTimeOriginalFrequencia(campoOriginalId);
+            calcularHorasFrequencia();
+        }
+        
+        function incrementarHoraFrequencia(horaId, campoOriginalId) {
+            const input = document.getElementById(horaId);
+            let valor = parseInt(input.value) || 0;
+            valor = (valor + 1) % 24;
+            input.value = valor.toString().padStart(2, '0');
+            validarHoraFrequencia(input, horaId.replace('H', 'M'), campoOriginalId);
+        }
+        
+        function decrementarHoraFrequencia(horaId, campoOriginalId) {
+            const input = document.getElementById(horaId);
+            let valor = parseInt(input.value) || 0;
+            valor = (valor - 1 + 24) % 24;
+            input.value = valor.toString().padStart(2, '0');
+            validarHoraFrequencia(input, horaId.replace('H', 'M'), campoOriginalId);
+        }
+        
+        function atualizarCampoTimeOriginalFrequencia(campoOriginalId) {
+            const campoOriginal = document.getElementById(campoOriginalId);
+            if (!campoOriginal) return;
+            
+            const prefix = campoOriginalId.replace('Manha', '').replace('Tarde', '').replace('entrada', '').replace('saida', '');
+            const horas = document.getElementById(campoOriginalId + 'H').value.padStart(2, '0');
+            const minutos = document.getElementById(campoOriginalId + 'M').value.padStart(2, '0');
+            
+            campoOriginal.value = \`\${horas}:\${minutos}\`;
+        }
+        
+        function calcularHorasFrequencia() {
+            const entradaManha = document.getElementById('entradaManha')?.value;
+            const saidaManha = document.getElementById('saidaManha')?.value;
+            const entradaTarde = document.getElementById('entradaTarde')?.value;
+            const saidaTarde = document.getElementById('saidaTarde')?.value;
+            
+            let horasManha = "00:00";
+            let horasTarde = "00:00";
+            let horasTotal = "00:00";
+            
+            if (entradaManha && saidaManha) {
+                horasManha = calcularHorasTrabalhadas(entradaManha, saidaManha, "00:00");
+            }
+            
+            if (entradaTarde && saidaTarde) {
+                horasTarde = calcularHorasTrabalhadas(entradaTarde, saidaTarde, "00:00");
+            }
+            
+            // Soma as horas
+            if (horasManha !== "00:00" || horasTarde !== "00:00") {
+                const [h1, m1] = horasManha.split(':').map(Number);
+                const [h2, m2] = horasTarde.split(':').map(Number);
+                
+                let totalMinutos = (h1 * 60 + m1) + (h2 * 60 + m2);
+                
+                // Desconta 1 hora de almoço se tiver ambos períodos
+                if (horasManha !== "00:00" && horasTarde !== "00:00") {
+                    totalMinutos -= 60;
+                }
+                
+                if (totalMinutos < 0) totalMinutos = 0;
+                
+                const horas = Math.floor(totalMinutos / 60);
+                const minutos = totalMinutos % 60;
+                horasTotal = \`\${String(horas).padStart(2, '0')}:\${String(minutos).padStart(2, '0')}\`;
+            }
+            
+            // Atualiza display
+            const horasManhaEl = document.getElementById('horasManha');
+            const horasTardeEl = document.getElementById('horasTarde');
+            const horasTotalEl = document.getElementById('horasTotal');
+            
+            if (horasManhaEl) horasManhaEl.textContent = horasManha;
+            if (horasTardeEl) horasTardeEl.textContent = horasTarde;
+            if (horasTotalEl) horasTotalEl.textContent = horasTotal;
+        }
+        
+        // Inicializar campos ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar todos os campos de hora
+            const camposTime = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
+            
+            camposTime.forEach(campoId => {
+                const campo = document.getElementById(campoId);
+                if (campo && campo.value) {
+                    const [horas, minutos] = campo.value.split(':');
+                    document.getElementById(campoId + 'H').value = horas || '08';
+                    document.getElementById(campoId + 'M').value = minutos || '00';
+                }
+            });
+            
+            // Calcular horas iniciais
+            calcularHorasFrequencia();
+        });
+        </script>
     `;
     
-    calcularHoras();
+    // Inicializar cálculo de horas
+    setTimeout(() => {
+        if (typeof calcularHorasFrequencia === 'function') {
+            calcularHorasFrequencia();
+        }
+    }, 100);
 }
 
 function configurarEventListenersFrequencia() {
@@ -225,15 +438,6 @@ function configurarEventListenersFrequencia() {
             frequenciaState.diaAtual = parseInt(e.target.value);
         });
     }
-    
-    // Campos de hora
-    const camposHora = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
-    camposHora.forEach(id => {
-        const campo = document.getElementById(id);
-        if (campo) {
-            campo.addEventListener('change', calcularHoras);
-        }
-    });
     
     // Botões principais
     const btnLimpar = document.getElementById('btnLimpar');
@@ -269,61 +473,32 @@ function configurarEventListenersFrequencia() {
     }
 }
 
-function calcularHoras() {
-    const entradaManha = document.getElementById('entradaManha')?.value;
-    const saidaManha = document.getElementById('saidaManha')?.value;
-    const entradaTarde = document.getElementById('entradaTarde')?.value;
-    const saidaTarde = document.getElementById('saidaTarde')?.value;
-    
-    let horasManha = "00:00";
-    let horasTarde = "00:00";
-    let horasTotal = "00:00";
-    
-    if (entradaManha && saidaManha) {
-        horasManha = calcularHorasTrabalhadas(entradaManha, saidaManha, "00:00");
-    }
-    
-    if (entradaTarde && saidaTarde) {
-        horasTarde = calcularHorasTrabalhadas(entradaTarde, saidaTarde, "00:00");
-    }
-    
-    // Soma as horas
-    if (horasManha !== "00:00" || horasTarde !== "00:00") {
-        const [h1, m1] = horasManha.split(':').map(Number);
-        const [h2, m2] = horasTarde.split(':').map(Number);
-        
-        let totalMinutos = (h1 * 60 + m1) + (h2 * 60 + m2);
-        
-        // Desconta 1 hora de almoço se tiver ambos períodos
-        if (horasManha !== "00:00" && horasTarde !== "00:00") {
-            totalMinutos -= 60;
-        }
-        
-        if (totalMinutos < 0) totalMinutos = 0;
-        
-        const horas = Math.floor(totalMinutos / 60);
-        const minutos = totalMinutos % 60;
-        horasTotal = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
-    }
-    
-    // Atualiza display
-    const horasManhaEl = document.getElementById('horasManha');
-    const horasTardeEl = document.getElementById('horasTarde');
-    const horasTotalEl = document.getElementById('horasTotal');
-    
-    if (horasManhaEl) horasManhaEl.textContent = horasManha;
-    if (horasTardeEl) horasTardeEl.textContent = horasTarde;
-    if (horasTotalEl) horasTotalEl.textContent = horasTotal;
-}
-
 function limparFrequencia() {
     if (confirm('Limpar todos os horários?')) {
-        const campos = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
-        campos.forEach(id => {
+        // Limpa os campos customizados (mobile)
+        const camposCustomizados = [
+            'entradaManhaH', 'entradaManhaM',
+            'saidaManhaH', 'saidaManhaM',
+            'entradaTardeH', 'entradaTardeM',
+            'saidaTardeH', 'saidaTardeM'
+        ];
+        
+        camposCustomizados.forEach(id => {
             const campo = document.getElementById(id);
             if (campo) campo.value = '';
         });
-        calcularHoras();
+        
+        // Limpa os campos originais (PC)
+        const camposOriginais = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
+        camposOriginais.forEach(id => {
+            const campo = document.getElementById(id);
+            if (campo) campo.value = '';
+        });
+        
+        // Recalcula horas
+        if (typeof calcularHorasFrequencia === 'function') {
+            calcularHorasFrequencia();
+        }
     }
 }
 

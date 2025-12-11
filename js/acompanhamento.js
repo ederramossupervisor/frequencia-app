@@ -1,4 +1,4 @@
-// ACOMPANHAMENTO.JS - VERSÃO COMPLETA COM BOTÃO PARA ABRIR PLANILHA
+// ACOMPANHAMENTO.JS - VERSÃO COMPLETA COM CAMPOS SIMPLES
 let acompanhamentoState = {
     mesAtual: '',
     dataJustificativa: formatarData(new Date())
@@ -90,78 +90,30 @@ function carregarInterfaceAcompanhamento() {
                         </div>
                     </div>
                     
-                    <!-- Horários da Justificativa - VERSÃO MODIFICADA PARA MOBILE -->
+                    <!-- Horários da Justificativa - VERSÃO SIMPLES -->
                     <div class="grid grid-2 gap-3">
-                        <!-- Hora Início (NOVO - para mobile) -->
-                        <div class="form-group time-input-group">
-                            <label class="form-label">
+                        <div class="form-group">
+                            <label class="form-label" for="horaInicioJustificativa">
                                 <i class="fas fa-play-circle"></i>
                                 Hora Início
                             </label>
-                            <div class="time-picker-container">
-                                <div class="time-inputs">
-                                    <input type="number" 
-                                           class="time-segment" 
-                                           id="horaInicioH" 
-                                           min="0" 
-                                           max="23" 
-                                           value="08"
-                                           oninput="validarHoraAcompanhamento(this, 'horaInicioM', 'inicio')">
-                                    <span class="time-separator">:</span>
-                                    <input type="number" 
-                                           class="time-segment" 
-                                           id="horaInicioM" 
-                                           min="0" 
-                                           max="59" 
-                                           value="00"
-                                           oninput="validarMinutoAcompanhamento(this, 'horaInicioH', 'inicio')">
-                                    <div class="time-buttons">
-                                        <button type="button" class="time-btn" onclick="incrementarHoraAcompanhamento('horaInicioH', 'inicio')">▲</button>
-                                        <button type="button" class="time-btn" onclick="decrementarHoraAcompanhamento('horaInicioH', 'inicio')">▼</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Campo original (escondido no mobile) -->
                             <input type="time" 
-                                   class="form-control mobile-time-input" 
+                                   class="form-control" 
                                    id="horaInicioJustificativa"
                                    value="08:00">
+                            <!-- Campo texto será criado AUTOMATICAMENTE pelo JavaScript -->
                         </div>
                         
-                        <!-- Hora Fim (NOVO - para mobile) -->
-                        <div class="form-group time-input-group">
-                            <label class="form-label">
+                        <div class="form-group">
+                            <label class="form-label" for="horaFimJustificativa">
                                 <i class="fas fa-stop-circle"></i>
                                 Hora Fim
                             </label>
-                            <div class="time-picker-container">
-                                <div class="time-inputs">
-                                    <input type="number" 
-                                           class="time-segment" 
-                                           id="horaFimH" 
-                                           min="0" 
-                                           max="23" 
-                                           value="17"
-                                           oninput="validarHoraAcompanhamento(this, 'horaFimM', 'fim')">
-                                    <span class="time-separator">:</span>
-                                    <input type="number" 
-                                           class="time-segment" 
-                                           id="horaFimM" 
-                                           min="0" 
-                                           max="59" 
-                                           value="00"
-                                           oninput="validarMinutoAcompanhamento(this, 'horaFimH', 'fim')">
-                                    <div class="time-buttons">
-                                        <button type="button" class="time-btn" onclick="incrementarHoraAcompanhamento('horaFimH', 'fim')">▲</button>
-                                        <button type="button" class="time-btn" onclick="decrementarHoraAcompanhamento('horaFimH', 'fim')">▼</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Campo original (escondido no mobile) -->
                             <input type="time" 
-                                   class="form-control mobile-time-input" 
+                                   class="form-control" 
                                    id="horaFimJustificativa"
                                    value="17:00">
+                            <!-- Campo texto será criado AUTOMATICAMENTE pelo JavaScript -->
                         </div>
                     </div>
                     
@@ -362,75 +314,6 @@ function carregarInterfaceAcompanhamento() {
                 </div>
             </div>
         </div>
-        
-        <!-- SCRIPTS PARA O TIME PICKER -->
-        <script>
-        // Funções para o time picker da aba Acompanhamento
-        function validarHoraAcompanhamento(input, minutoId, tipo) {
-            let valor = parseInt(input.value) || 0;
-            if (valor < 0) valor = 0;
-            if (valor > 23) valor = 23;
-            input.value = valor.toString().padStart(2, '0');
-            atualizarCampoTimeOriginalAcompanhamento(tipo);
-            calcularHorasJustificativa();
-        }
-        
-        function validarMinutoAcompanhamento(input, horaId, tipo) {
-            let valor = parseInt(input.value) || 0;
-            if (valor < 0) valor = 0;
-            if (valor > 59) valor = 59;
-            input.value = valor.toString().padStart(2, '0');
-            atualizarCampoTimeOriginalAcompanhamento(tipo);
-            calcularHorasJustificativa();
-        }
-        
-        function incrementarHoraAcompanhamento(horaId, tipo) {
-            const input = document.getElementById(horaId);
-            let valor = parseInt(input.value) || 0;
-            valor = (valor + 1) % 24;
-            input.value = valor.toString().padStart(2, '0');
-            validarHoraAcompanhamento(input, horaId.replace('H', 'M'), tipo);
-        }
-        
-        function decrementarHoraAcompanhamento(horaId, tipo) {
-            const input = document.getElementById(horaId);
-            let valor = parseInt(input.value) || 0;
-            valor = (valor - 1 + 24) % 24;
-            input.value = valor.toString().padStart(2, '0');
-            validarHoraAcompanhamento(input, horaId.replace('H', 'M'), tipo);
-        }
-        
-        function atualizarCampoTimeOriginalAcompanhamento(tipo) {
-            const campoId = tipo === 'inicio' ? 'horaInicioJustificativa' : 'horaFimJustificativa';
-            const campoOriginal = document.getElementById(campoId);
-            if (!campoOriginal) return;
-            
-            const prefix = tipo === 'inicio' ? 'horaInicio' : 'horaFim';
-            const horas = document.getElementById(prefix + 'H').value.padStart(2, '0');
-            const minutos = document.getElementById(prefix + 'M').value.padStart(2, '0');
-            
-            campoOriginal.value = \`\${horas}:\${minutos}\`;
-        }
-        
-        // Inicializar campos ao carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hora Início
-            const inicioCampo = document.getElementById('horaInicioJustificativa');
-            if (inicioCampo && inicioCampo.value) {
-                const [horas, minutos] = inicioCampo.value.split(':');
-                document.getElementById('horaInicioH').value = horas || '08';
-                document.getElementById('horaInicioM').value = minutos || '00';
-            }
-            
-            // Hora Fim
-            const fimCampo = document.getElementById('horaFimJustificativa');
-            if (fimCampo && fimCampo.value) {
-                const [horas, minutos] = fimCampo.value.split(':');
-                document.getElementById('horaFimH').value = horas || '17';
-                document.getElementById('horaFimM').value = minutos || '00';
-            }
-        });
-        </script>
     `;
     
     calcularHorasJustificativa();
@@ -440,6 +323,14 @@ function configurarEventListenersAcompanhamento() {
     // Data e mês
     document.getElementById('dataJustificativa')?.addEventListener('change', (e) => {
         acompanhamentoState.dataJustificativa = e.target.value;
+    });
+    
+    // Horários
+    ['horaInicioJustificativa', 'horaFimJustificativa'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', calcularHorasJustificativa);
+        }
     });
     
     // Checkbox almoço
@@ -575,22 +466,18 @@ function calcularHorasJustificativa() {
 function limparJustificativa() {
     if (confirm('Limpar formulário de justificativa?')) {
         const codigoSelect = document.getElementById('codigoJustificativa');
-        const horaInicioH = document.getElementById('horaInicioH');
-        const horaInicioM = document.getElementById('horaInicioM');
-        const horaFimH = document.getElementById('horaFimH');
-        const horaFimM = document.getElementById('horaFimM');
-        const horaInicioOriginal = document.getElementById('horaInicioJustificativa');
-        const horaFimOriginal = document.getElementById('horaFimJustificativa');
+        const horaInicio = document.getElementById('horaInicioJustificativa');
+        const horaFim = document.getElementById('horaFimJustificativa');
+        const horaInicioMobile = document.getElementById('horaInicioJustificativaMobile');
+        const horaFimMobile = document.getElementById('horaFimJustificativaMobile');
         const fezAlmoco = document.getElementById('fezAlmoco');
         const observacao = document.getElementById('observacaoJustificativa');
         
         if (codigoSelect) codigoSelect.value = '';
-        if (horaInicioH) horaInicioH.value = '08';
-        if (horaInicioM) horaInicioM.value = '00';
-        if (horaFimH) horaFimH.value = '17';
-        if (horaFimM) horaFimM.value = '00';
-        if (horaInicioOriginal) horaInicioOriginal.value = '08:00';
-        if (horaFimOriginal) horaFimOriginal.value = '17:00';
+        if (horaInicio) horaInicio.value = '08:00';
+        if (horaFim) horaFim.value = '17:00';
+        if (horaInicioMobile) horaInicioMobile.value = '08:00';
+        if (horaFimMobile) horaFimMobile.value = '17:00';
         if (fezAlmoco) fezAlmoco.checked = true;
         if (observacao) observacao.value = '';
         

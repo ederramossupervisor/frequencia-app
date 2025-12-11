@@ -493,13 +493,13 @@ function criarCampoTextoMobile(campoTime) {
     const container = document.createElement('div');
     container.className = 'mobile-time-container';
     
-    // Cria campo de texto
+    // Cria campo de texto SEM valor pré-definido
     const campoTexto = document.createElement('input');
     campoTexto.type = 'text';
     campoTexto.className = 'form-control time-simple-input';
     campoTexto.id = id + 'Mobile';
-    campoTexto.value = valorAtual;
-    campoTexto.placeholder = 'HH:MM';
+    campoTexto.value = '';  // ⬅️ VAZIO em vez do valor pré-definido
+    campoTexto.placeholder = 'HH:MM';  // ⬅️ Placeholder como sugestão
     campoTexto.maxLength = 5;
     
     // Adiciona eventos
@@ -521,8 +521,7 @@ function criarCampoTextoMobile(campoTime) {
     
     // Adiciona ao container
     container.appendChild(campoTexto);
-    container.appendChild(ajuda);
-    
+        
     // Insere antes do campo time
     campoTime.parentNode.insertBefore(container, campoTime);
     

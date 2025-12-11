@@ -445,3 +445,146 @@ function inicializarCamposHora() {
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(inicializarCamposHora, 100);
 });
+// ============================================
+// CORREÇÃO IMEDIATA - CRIA CAMPOS DE HORA NO MOBILE
+// ============================================
+
+function criarCamposHoraMobile() {
+    console.log('📱 Criando campos de hora para mobile...');
+    
+    // Verifica se é mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    if (!isMobile) {
+        console.log('💻 É PC, mantendo campos time normais');
+        return;
+    }
+    
+    console.log('📱 É MOBILE, criando campos de texto...');
+    
+    // Para cada campo time na aba Frequência
+    const camposFrequencia = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
+    
+    camposFrequencia.forEach(id => {
+        const campoTime = document.getElementById(id);
+        if (campoTime && !document.getElementById(id + 'Mobile')) {
+            criarCampoTextoMobile(campoTime);
+        }
+    });
+    
+    // Para cada campo time na aba Acompanhamento
+    const camposAcompanhamento = ['horaInicioJustificativa', 'horaFimJustificativa'];
+    
+    camposAcompanhamento.forEach(id => {
+        const campoTime = document.getElementById(id);
+        if (campoTime && !document.getElementById(id + 'Mobile')) {
+            criarCampoTextoMobile(campoTime);
+        }
+    });
+    
+    console.log('✅ Campos de hora mobile criados');
+}
+
+function criarCampoTextoMobile(campoTime) {
+    const id = campoTime.id;
+    const valorAtual = campoTime.value || '08:00';
+    
+    // Cria container
+    const container = document.createElement('div');
+    container.className = 'mobile-time-container';
+    
+    // Cria campo de texto
+    const campoTexto = document.createElement('input');
+    campoTexto.type = 'text';
+    campoTexto.className = 'form-control time-simple-input';
+    campoTexto.id = id + 'Mobile';
+    campoTexto.value = valorAtual;
+    campoTexto.placeholder = 'HH:MM';
+    campoTexto.maxLength = 5;
+    
+    // Adiciona eventos
+    campoTexto.addEventListener('input', function(e) {
+        formatarHoraInputMobile(this);
+    });
+    
+    campoTexto.addEventListener('blur', function() {
+        validarHoraMobile(this);
+    });
+    
+    // Cria mensagem de ajuda
+    const ajuda = document.createElement('small');
+    ajuda.className = 'time-help';
+    ajuda.textContent = 'Digite HH:MM (ex: 08:30)';
+    ajuda.style.display = 'block';
+    ajuda.style.marginTop = '5px';
+    ajuda.style.color = '#666';
+    
+    // Adiciona ao container
+    container.appendChild(campoTexto);
+    container.appendChild(ajuda);
+    
+    // Insere antes do campo time
+    campoTime.parentNode.insertBefore(container, campoTime);
+    
+    // Esconde o campo time original
+    campoTime.style.display = 'none';
+    
+    console.log(`✅ Campo ${id}Mobile criado`);
+}
+
+function formatarHoraInputMobile(input) {
+    let valor = input.value.replace(/\D/g, '');
+    
+    // Limita a 4 dígitos
+    if (valor.length > 4) {
+        valor = valor.substring(0, 4);
+    }
+    
+    // Adiciona dois pontos automaticamente
+    if (valor.length >= 3) {
+        valor = valor.substring(0, 2) + ':' + valor.substring(2);
+    }
+    
+    input.value = valor;
+    
+    // Sincroniza com campo time original
+    const campoTimeId = input.id.replace('Mobile', '');
+    const campoTime = document.getElementById(campoTimeId);
+    if (campoTime && validarHoraMobile(input)) {
+        campoTime.value = input.value;
+        
+        // Dispara evento change para cálculos
+        campoTime.dispatchEvent(new Event('change'));
+    }
+}
+
+function validarHoraMobile(input) {
+    const valor = input.value;
+    const padrao = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
+    
+    if (padrao.test(valor)) {
+        input.style.borderColor = 'var(--verde-musgo)';
+        return true;
+    } else {
+        input.style.borderColor = 'var(--erro)';
+        return false;
+    }
+}
+
+// Executa quando a página carrega E quando muda de aba
+document.addEventListener('DOMContentLoaded', function() {
+    // Executa imediatamente
+    setTimeout(criarCamposHoraMobile, 500);
+    
+    // Executa sempre que muda de aba
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.tab-btn')) {
+            setTimeout(criarCamposHoraMobile, 300);
+        }
+    });
+});
+
+// Também executa quando a janela redimensiona (muda entre mobile/PC)
+window.addEventListener('resize', function() {
+    setTimeout(criarCamposHoraMobile, 300);
+});

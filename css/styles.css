@@ -696,3 +696,143 @@ select.form-control {
     border-color: var(--erro) !important;
     box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1) !important;
 }
+/* ============================================
+   NOVO ESTILO PARA SELETORES DE HORA NUMÉRICOS
+   (Para celular - substitui o type="time")
+   ============================================ */
+
+.time-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.time-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.time-input-group label {
+    font-size: 0.9rem;
+    color: var(--verde-musgo-escuro);
+    min-width: 70px;
+    font-weight: 500;
+}
+
+.time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--branco);
+    border: 2px solid var(--cinza-claro);
+    border-radius: 10px;
+    padding: 5px 10px;
+    transition: var(--transicao-rapida);
+}
+
+.time-inputs:focus-within {
+    border-color: var(--verde-musgo);
+    box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.1);
+}
+
+.time-segment {
+    width: 50px;
+    height: 45px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--verde-musgo-escuro);
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+.time-segment:focus {
+    outline: none;
+    background: var(--branco-gelo);
+    border-radius: 6px;
+}
+
+.time-separator {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--verde-musgo);
+    margin: 0 2px;
+}
+
+/* Remove setas dos inputs numéricos */
+.time-segment::-webkit-outer-spin-button,
+.time-segment::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Estilo para os botões de incremento/decremento */
+.time-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 5px;
+}
+
+.time-btn {
+    width: 30px;
+    height: 22px;
+    border: none;
+    background: var(--cinza-claro);
+    color: var(--verde-musgo-escuro);
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: var(--transicao-rapida);
+    user-select: none;
+}
+
+.time-btn:hover {
+    background: var(--verde-musgo);
+    color: var(--branco);
+}
+
+.time-btn:active {
+    transform: scale(0.95);
+}
+
+/* Apenas para celular */
+@media (max-width: 768px) {
+    .time-input-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .time-input-group label {
+        min-width: auto;
+        font-size: 0.85rem;
+    }
+    
+    .time-segment {
+        width: 60px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+    
+    .time-btn {
+        width: 35px;
+        height: 25px;
+        font-size: 1rem;
+    }
+}
+
+/* Para PC - mantém o original */
+@media (min-width: 769px) {
+    .time-picker-container {
+        display: none; /* Esconde no PC */
+    }
+}

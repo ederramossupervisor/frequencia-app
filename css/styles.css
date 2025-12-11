@@ -824,3 +824,23 @@ select.form-control {
         display: none !important;
     }
 }
+/* ============================================
+   ESTILO PARA PLACEHOLDER (SUGESTÃO)
+   ============================================ */
+
+.time-simple-input::placeholder {
+    color: #8BC34A;  /* Verde mais claro */
+    opacity: 0.7;
+    font-weight: normal;
+    letter-spacing: normal;
+}
+
+.time-simple-input:focus::placeholder {
+    color: #6B8E23;  /* Verde mais escuro quando focado */
+    opacity: 0.5;
+}
+
+/* Remover estilos antigos da legenda */
+.time-help {
+    display: none !important;
+}

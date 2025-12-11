@@ -443,4 +443,5 @@ function inicializarCamposHora() {
 
 // Inicializa quando a página carrega
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(inicializarCamposHora,
+    setTimeout(inicializarCamposHora, 100);
+});

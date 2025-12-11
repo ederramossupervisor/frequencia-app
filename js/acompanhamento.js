@@ -166,19 +166,24 @@ function carregarInterfaceAcompanhamento() {
                         </div>
                     </div>
                     
-                    <!-- Campo de Observação -->
+                    <!-- Campo de Observação (OBRIGATÓRIO) -->
                     <div class="form-group mt-3">
                         <label class="form-label" for="observacaoJustificativa">
                             <i class="fas fa-edit"></i>
-                            Observação / Descrição
+                            Observação <span style="color: red;">*</span>
                         </label>
                         <textarea 
                             class="form-control" 
                             id="observacaoJustificativa"
                             rows="3"
-                            placeholder="Descreva brevemente a justificativa (opcional)..."
+                            placeholder="Digite a observação (obrigatório)..."
                             maxlength="200"
+                            required
+                            oninput="validarObservacao()"
                         ></textarea>
+                        <small class="form-text text-danger" id="obsError" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i> Este campo é obrigatório
+                        </small>
                         <small class="form-text">
                             Esta observação será salva na planilha de acompanhamento
                         </small>
@@ -476,7 +481,38 @@ function limparJustificativa() {
         calcularHorasJustificativa();
     }
 }
+// ============================================
+// VALIDAÇÃO DO CAMPO OBSERVAÇÃO
+// ============================================
 
+function validarObservacao() {
+    const campo = document.getElementById('observacaoJustificativa');
+    const erro = document.getElementById('obsError');
+    
+    if (!campo || !erro) return;
+    
+    // Remove espaços em branco
+    const valor = campo.value.trim();
+    
+    if (valor === '') {
+        campo.style.borderColor = 'var(--erro)';
+        erro.style.display = 'block';
+        return false;
+    } else {
+        campo.style.borderColor = '';
+        erro.style.display = 'none';
+        return true;
+    }
+}
+
+// Validação em tempo real
+document.addEventListener('DOMContentLoaded', function() {
+    const campoObs = document.getElementById('observacaoJustificativa');
+    if (campoObs) {
+        campoObs.addEventListener('blur', validarObservacao);
+        campoObs.addEventListener('input', validarObservacao);
+    }
+});
 async function salvarJustificativa() {
     try {
         console.log('🔄 Iniciando salvamento de justificativa...');
@@ -508,7 +544,15 @@ async function salvarJustificativa() {
         if (!mesSelect?.value) {
             throw new Error('Selecione o mês');
         }
-        
+        // VALIDAÇÃO DA OBSERVAÇÃO (NOVO)
+const observacaoTextarea = document.getElementById('observacaoJustificativa');
+if (!observacaoTextarea?.value || observacaoTextarea.value.trim() === '') {
+    // Mostra erro visual
+    validarObservacao();
+    // Foca no campo
+    observacaoTextarea.focus();
+    throw new Error('O campo Observação é obrigatório');
+}
         // VERIFICAÇÃO ESPECÍFICA DO CÓDIGO
         if (!codigoSelect?.value || codigoSelect.value === '') {
             console.log('❌ Código selecionado:', codigoSelect?.value);

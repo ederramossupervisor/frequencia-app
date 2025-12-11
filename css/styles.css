@@ -680,3 +680,19 @@ select.form-control {
     background: rgba(85, 107, 47, 0.1);
     color: var(--verde-musgo);
 }
+/* ESTILO PARA CAMPOS OBRIGATÓRIOS */
+.form-label span.obrigatorio {
+    color: var(--erro);
+    font-weight: bold;
+    margin-left: 3px;
+}
+
+.campo-obrigatorio {
+    border-left: 4px solid var(--erro) !important;
+    background-color: rgba(244, 67, 54, 0.05) !important;
+}
+
+.campo-obrigatorio:focus {
+    border-color: var(--erro) !important;
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1) !important;
+}

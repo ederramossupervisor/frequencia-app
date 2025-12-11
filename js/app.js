@@ -523,3 +523,51 @@ window.addEventListener('unhandledrejection', (event) => {
         8000
     );
 });
+// ============================================
+// CORREÇÃO: REMOVE MENSAGENS "CARREGANDO..."
+// ============================================
+
+function removerMensagensCarregando() {
+    console.log('🔧 Removendo mensagens de carregamento...');
+    
+    // Remove de TODAS as abas imediatamente
+    const loadings = document.querySelectorAll('.tab-pane .loading');
+    console.log('📊 Encontrados', loadings.length, 'elementos loading');
+    
+    loadings.forEach((loading, index) => {
+        console.log(`🗑️ Removendo loading ${index + 1}`);
+        loading.style.opacity = '0';
+        loading.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+            if (loading.parentNode) {
+                loading.remove();
+                console.log(`✅ Loading ${index + 1} removido`);
+            }
+        }, 300);
+    });
+    
+    // Se ainda houver conteúdo "carregando..." em texto
+    document.querySelectorAll('.tab-pane').forEach(aba => {
+        const texto = aba.textContent || '';
+        if (texto.includes('carregando') || texto.includes('Carregando')) {
+            console.log('📝 Limpando texto "carregando" da aba:', aba.id);
+            aba.innerHTML = '<div class="card"><p>Aguarde, conteúdo carregando...</p></div>';
+        }
+    });
+}
+
+// Executa quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', removerMensagensCarregando);
+
+// Executa após 3 segundos (fallback)
+setTimeout(removerMensagensCarregando, 3000);
+
+// Executa quando muda de aba
+document.querySelectorAll('.tab-btn').forEach(botao => {
+    botao.addEventListener('click', function() {
+        setTimeout(removerMensagensCarregando, 500);
+    });
+});
+
+console.log('✅ Sistema de remoção de loading instalado');

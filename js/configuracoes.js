@@ -5,6 +5,7 @@
  */
 function initConfiguracoes() {
     console.log('Inicializando aba Configurações...');
+    document.querySelector('#configuracoes .loading')?.remove();
     
     // Carrega interface
     carregarInterfaceConfiguracoes();

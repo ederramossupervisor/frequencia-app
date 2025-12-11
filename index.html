@@ -316,5 +316,97 @@ console.log('Verificando funções:', {
     initConfiguracoes: typeof initConfiguracoes
 });
 </script>
+<script>
+// ============================================
+// OBSERVADOR DE VISIBILIDADE - CARREGA QUANDO VOCÊ OLHA
+// ============================================
+
+console.log('👁️ Iniciando observador de visibilidade...');
+
+// Cria um "olheiro" que fica observando as abas
+const observadorDeAbas = new IntersectionObserver(function(entradas) {
+    // Para cada aba que mudou de visibilidade
+    entradas.forEach(function(entrada) {
+        
+        // SE A ABA FICOU VISÍVEL (você está olhando para ela)
+        if (entrada.isIntersecting) {
+            const idDaAba = entrada.target.id;
+            console.log(`👀 Aba "${idDaAba}" está visível agora!`);
+            
+            // Pequeno delay para garantir
+            setTimeout(function() {
+                // VERIFICA SE PRECISA CARREGAR
+                const conteudoAba = entrada.target.innerHTML || '';
+                const precisaCarregar = 
+                    conteudoAba.includes('Aguarde') || 
+                    conteudoAba.includes('carregando') ||
+                    conteudoAba.trim() === '';
+                
+                if (precisaCarregar) {
+                    console.log(`⚡ Carregando conteúdo da aba "${idDaAba}"...`);
+                    carregarConteudoDaAba(idDaAba);
+                } else {
+                    console.log(`✅ Aba "${idDaAba}" já tem conteúdo`);
+                }
+            }, 300); // Espera 300ms (0.3 segundos)
+        }
+    });
+}, {
+    // CONFIGURAÇÃO DO OBSERVADOR:
+    threshold: 0.3 // Dispara quando 30% da aba estiver visível
+});
+
+// FUNÇÃO QUE CARREGA O CONTEÚDO
+function carregarConteudoDaAba(idDaAba) {
+    switch(idDaAba) {
+        case 'configuracoes':
+            if (typeof initConfiguracoes === 'function') {
+                initConfiguracoes();
+            }
+            break;
+            
+        case 'acompanhamento':
+            if (typeof initAcompanhamento === 'function') {
+                initAcompanhamento();
+            }
+            break;
+            
+        case 'frequencia':
+            if (typeof initFrequencia === 'function') {
+                initFrequencia();
+            }
+            break;
+    }
+}
+
+// INICIA A OBSERVAÇÃO DAS ABAS
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ DOM carregado, observando abas...');
+    
+    // Pega todas as 3 abas
+    const todasAsAbas = document.querySelectorAll('.tab-pane');
+    console.log(`🔍 Encontrei ${todasAsAbas.length} abas para observar`);
+    
+    // Começa a observar cada aba
+    todasAsAbas.forEach(function(aba) {
+        observadorDeAbas.observe(aba);
+        console.log(`👁️ Observando aba: ${aba.id}`);
+    });
+});
+
+// Fallback: Se após 5 segundos ainda não carregou, força
+setTimeout(function() {
+    console.log('⏰ Fallback: Verificando abas não carregadas...');
+    
+    document.querySelectorAll('.tab-pane').forEach(function(aba) {
+        if (aba.innerHTML.includes('Aguarde') || aba.innerHTML.trim() === '') {
+            console.log(`⚡ Fallback: Forçando carga da aba ${aba.id}`);
+            carregarConteudoDaAba(aba.id);
+        }
+    });
+}, 5000); // 5 segundos
+
+console.log('✅ Observador de visibilidade configurado!');
+</script>
 </body>
 </html>

@@ -1,8 +1,12 @@
-// sw-simple.js - APENAS para limpar cache no Android
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', () => self.clients.claim());
-
-self.addEventListener('fetch', event => {
-  // SEMPRE busca da rede primeiro, ignora cache
-  event.respondWith(fetch(event.request));
+// sw-simples.js - Service Worker MÍNIMO
+self.addEventListener('install', (e) => {
+  console.log('SW: Instalação simples');
+  self.skipWaiting();
 });
+
+self.addEventListener('activate', (e) => {
+  console.log('SW: Ativação simples');
+  return self.clients.claim();
+});
+
+// SEM fetch event - evita looping

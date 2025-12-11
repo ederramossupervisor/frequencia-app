@@ -337,86 +337,110 @@ function formatarHorasAmigavel(horas) {
         return `${h} hora${h > 1 ? 's' : ''} e ${m} minutos`;
     }
 }
+
 // ============================================
-// FUNÇÕES AUXILIARES PARA O TIME PICKER
+// FUNÇÕES PARA CAMPOS DE HORA SIMPLES
 // ============================================
 
 /**
- * Formata hora para HH:MM
+ * Formata input de hora enquanto digita (HH:MM)
  */
-function formatarHoraParaExibicao(horas, minutos) {
-    const h = String(horas || 0).padStart(2, '0');
-    const m = String(minutos || 0).padStart(2, '0');
-    return `${h}:${m}`;
-}
-
-/**
- * Converte HH:MM para objeto {horas, minutos}
- */
-function parseHoraString(horaString) {
-    if (!horaString) return { horas: 0, minutos: 0 };
+function formatarHoraInput(input) {
+    let valor = input.value.replace(/\D/g, ''); // Remove não-números
     
-    const [horas, minutos] = horaString.split(':').map(Number);
-    return {
-        horas: isNaN(horas) ? 0 : horas,
-        minutos: isNaN(minutos) ? 0 : minutos
-    };
+    // Limita a 4 dígitos
+    if (valor.length > 4) {
+        valor = valor.substring(0, 4);
+    }
+    
+    // Adiciona os dois pontos automaticamente
+    if (valor.length >= 3) {
+        valor = valor.substring(0, 2) + ':' + valor.substring(2);
+    }
+    
+    input.value = valor;
+    
+    // Valida a hora
+    validarHoraSimples(input);
+    
+    // Sincroniza com campo time original
+    sincronizarComTimeOriginal(input);
 }
 
 /**
- * Verifica se está em dispositivo móvel
+ * Valida se a hora digitada é válida
  */
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           window.innerWidth <= 768;
+function validarHoraSimples(input) {
+    const valor = input.value;
+    
+    // Formato HH:MM
+    if (!/^\d{2}:\d{2}$/.test(valor)) {
+        input.style.borderColor = 'var(--cinza-claro)';
+        return false;
+    }
+    
+    const [horas, minutos] = valor.split(':').map(Number);
+    
+    // Valida horas (0-23) e minutos (0-59)
+    if (horas < 0 || horas > 23 || minutos < 0 || minutos > 59) {
+        input.style.borderColor = 'var(--erro)';
+        return false;
+    }
+    
+    input.style.borderColor = 'var(--verde-musgo)';
+    return true;
 }
 
 /**
- * Atualiza um campo time com valores de horas e minutos
+ * Sincroniza campo texto com campo time (para envio)
  */
-function atualizarCampoTime(campoId, horas, minutos) {
-    const campo = document.getElementById(campoId);
-    if (campo) {
-        campo.value = formatarHoraParaExibicao(horas, minutos);
+function sincronizarComTimeOriginal(input) {
+    const campoTimeId = input.id.replace('Mobile', '');
+    const campoTime = document.getElementById(campoTimeId);
+    
+    if (campoTime && validarHoraSimples(input)) {
+        campoTime.value = input.value;
     }
 }
 
 /**
- * Sincroniza campos customizados com campos time originais
+ * Inicializa campos de hora na página
  */
-function sincronizarCamposTime() {
-    // Sincroniza campos da aba Acompanhamento
-    if (document.getElementById('horaInicioH')) {
-        const inicioH = document.getElementById('horaInicioH').value || '08';
-        const inicioM = document.getElementById('horaInicioM').value || '00';
-        atualizarCampoTime('horaInicioJustificativa', inicioH, inicioM);
-    }
+function inicializarCamposHora() {
+    // Verifica se é mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     window.innerWidth <= 768;
     
-    if (document.getElementById('horaFimH')) {
-        const fimH = document.getElementById('horaFimH').value || '17';
-        const fimM = document.getElementById('horaFimM').value || '00';
-        atualizarCampoTime('horaFimJustificativa', fimH, fimM);
-    }
+    if (!isMobile) return; // Só faz no mobile
     
-    // Sincroniza campos da aba Frequência
-    const camposFrequencia = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
-    
-    camposFrequencia.forEach(campoId => {
-        const campoH = document.getElementById(campoId + 'H');
-        const campoM = document.getElementById(campoId + 'M');
-        
-        if (campoH && campoM) {
-            const horas = campoH.value || '08';
-            const minutos = campoM.value || '00';
-            atualizarCampoTime(campoId, horas, minutos);
+    // Para cada campo time, cria um campo texto correspondente
+    document.querySelectorAll('input[type="time"]').forEach(campoTime => {
+        if (campoTime.id && !document.getElementById(campoTime.id + 'Mobile')) {
+            // Cria campo texto
+            const campoTexto = document.createElement('input');
+            campoTexto.type = 'text';
+            campoTexto.className = 'form-control time-simple-input';
+            campoTexto.id = campoTime.id + 'Mobile';
+            campoTexto.placeholder = campoTime.value || '08:00';
+            campoTexto.value = campoTime.value || '08:00';
+            campoTexto.maxLength = 5;
+            campoTexto.oninput = function() { formatarHoraInput(this); };
+            
+            // Insere antes do campo time
+            campoTime.parentNode.insertBefore(campoTexto, campoTime);
+            
+            // Adiciona mensagem de ajuda
+            const ajuda = document.createElement('small');
+            ajuda.className = 'time-help';
+            ajuda.textContent = 'Digite HH:MM (ex: 08:30)';
+            campoTime.parentNode.insertBefore(ajuda, campoTime.nextSibling);
+            
+            // Esconde o campo time original
+            campoTime.style.display = 'none';
         }
     });
 }
 
-// Executa sincronização quando a página carrega
+// Inicializa quando a página carrega
 document.addEventListener('DOMContentLoaded', function() {
-    // Sincroniza a cada segundo (apenas se estiver em mobile)
-    if (isMobileDevice()) {
-        setInterval(sincronizarCamposTime, 1000);
-    }
-});
+    setTimeout(inicializarCamposHora,

@@ -337,3 +337,86 @@ function formatarHorasAmigavel(horas) {
         return `${h} hora${h > 1 ? 's' : ''} e ${m} minutos`;
     }
 }
+// ============================================
+// FUNÇÕES AUXILIARES PARA O TIME PICKER
+// ============================================
+
+/**
+ * Formata hora para HH:MM
+ */
+function formatarHoraParaExibicao(horas, minutos) {
+    const h = String(horas || 0).padStart(2, '0');
+    const m = String(minutos || 0).padStart(2, '0');
+    return `${h}:${m}`;
+}
+
+/**
+ * Converte HH:MM para objeto {horas, minutos}
+ */
+function parseHoraString(horaString) {
+    if (!horaString) return { horas: 0, minutos: 0 };
+    
+    const [horas, minutos] = horaString.split(':').map(Number);
+    return {
+        horas: isNaN(horas) ? 0 : horas,
+        minutos: isNaN(minutos) ? 0 : minutos
+    };
+}
+
+/**
+ * Verifica se está em dispositivo móvel
+ */
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           window.innerWidth <= 768;
+}
+
+/**
+ * Atualiza um campo time com valores de horas e minutos
+ */
+function atualizarCampoTime(campoId, horas, minutos) {
+    const campo = document.getElementById(campoId);
+    if (campo) {
+        campo.value = formatarHoraParaExibicao(horas, minutos);
+    }
+}
+
+/**
+ * Sincroniza campos customizados com campos time originais
+ */
+function sincronizarCamposTime() {
+    // Sincroniza campos da aba Acompanhamento
+    if (document.getElementById('horaInicioH')) {
+        const inicioH = document.getElementById('horaInicioH').value || '08';
+        const inicioM = document.getElementById('horaInicioM').value || '00';
+        atualizarCampoTime('horaInicioJustificativa', inicioH, inicioM);
+    }
+    
+    if (document.getElementById('horaFimH')) {
+        const fimH = document.getElementById('horaFimH').value || '17';
+        const fimM = document.getElementById('horaFimM').value || '00';
+        atualizarCampoTime('horaFimJustificativa', fimH, fimM);
+    }
+    
+    // Sincroniza campos da aba Frequência
+    const camposFrequencia = ['entradaManha', 'saidaManha', 'entradaTarde', 'saidaTarde'];
+    
+    camposFrequencia.forEach(campoId => {
+        const campoH = document.getElementById(campoId + 'H');
+        const campoM = document.getElementById(campoId + 'M');
+        
+        if (campoH && campoM) {
+            const horas = campoH.value || '08';
+            const minutos = campoM.value || '00';
+            atualizarCampoTime(campoId, horas, minutos);
+        }
+    });
+}
+
+// Executa sincronização quando a página carrega
+document.addEventListener('DOMContentLoaded', function() {
+    // Sincroniza a cada segundo (apenas se estiver em mobile)
+    if (isMobileDevice()) {
+        setInterval(sincronizarCamposTime, 1000);
+    }
+});

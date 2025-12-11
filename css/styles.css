@@ -696,143 +696,68 @@ select.form-control {
     border-color: var(--erro) !important;
     box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1) !important;
 }
+
 /* ============================================
-   NOVO ESTILO PARA SELETORES DE HORA NUMÉRICOS
-   (Para celular - substitui o type="time")
+   ESTILO SIMPLES PARA CAMPOS DE HORA
    ============================================ */
 
-.time-picker-container {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.time-input-group {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.time-input-group label {
-    font-size: 0.9rem;
-    color: var(--verde-musgo-escuro);
-    min-width: 70px;
-    font-weight: 500;
-}
-
-.time-inputs {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--branco);
+/* Campo de TEXTO para hora (mobile) */
+.time-simple-input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1.1rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    text-align: center;
     border: 2px solid var(--cinza-claro);
-    border-radius: 10px;
-    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--branco);
+    color: var(--verde-musgo-escuro);
     transition: var(--transicao-rapida);
+    letter-spacing: 1px;
 }
 
-.time-inputs:focus-within {
+.time-simple-input:focus {
+    outline: none;
     border-color: var(--verde-musgo);
     box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.1);
 }
 
-.time-segment {
-    width: 50px;
-    height: 45px;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    border: none;
-    background: transparent;
-    color: var(--verde-musgo-escuro);
-    -webkit-appearance: none;
-    -moz-appearance: textfield;
+.time-simple-input::placeholder {
+    color: var(--cinza-medio);
+    opacity: 0.7;
 }
 
-.time-segment:focus {
-    outline: none;
-    background: var(--branco-gelo);
-    border-radius: 6px;
-}
-
-.time-separator {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--verde-musgo);
-    margin: 0 2px;
-}
-
-/* Remove setas dos inputs numéricos */
-.time-segment::-webkit-outer-spin-button,
-.time-segment::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Estilo para os botões de incremento/decremento */
-.time-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-left: 5px;
-}
-
-.time-btn {
-    width: 30px;
-    height: 22px;
-    border: none;
-    background: var(--cinza-claro);
-    color: var(--verde-musgo-escuro);
-    font-size: 0.9rem;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: var(--transicao-rapida);
-    user-select: none;
-}
-
-.time-btn:hover {
-    background: var(--verde-musgo);
-    color: var(--branco);
-}
-
-.time-btn:active {
-    transform: scale(0.95);
-}
-
-/* Apenas para celular */
+/* Apenas para MOBILE - mostra campo de texto, esconde type="time" */
 @media (max-width: 768px) {
-    .time-input-group {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+    input[type="time"] {
+        display: none !important;
     }
     
-    .time-input-group label {
-        min-width: auto;
-        font-size: 0.85rem;
-    }
-    
-    .time-segment {
-        width: 60px;
-        height: 50px;
-        font-size: 1.3rem;
-    }
-    
-    .time-btn {
-        width: 35px;
-        height: 25px;
-        font-size: 1rem;
+    .time-simple-input {
+        display: block !important;
+        font-size: 1.2rem;
+        padding: 14px;
+        height: 52px;
     }
 }
 
-/* Para PC - mantém o original */
+/* Apenas para PC - mostra type="time", esconde campo de texto */
 @media (min-width: 769px) {
-    .time-picker-container {
-        display: none; /* Esconde no PC */
+    .time-simple-input {
+        display: none !important;
     }
+    
+    input[type="time"] {
+        display: block !important;
+    }
+}
+
+/* Mensagem de ajuda */
+.time-help {
+    font-size: 0.85rem;
+    color: var(--cinza-escuro);
+    margin-top: 5px;
+    display: block;
+    text-align: center;
 }

@@ -6,7 +6,7 @@ let acompanhamentoState = {
 
 function initAcompanhamento() {
     console.log('Inicializando aba Acompanhamento...');
-    
+    document.querySelector('#acompanhamento .loading')?.remove();
     acompanhamentoState.mesAtual = obterMesAtual();
     
     carregarInterfaceAcompanhamento();

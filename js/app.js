@@ -20,6 +20,7 @@ function mudarParaAba(aba) {
  */
 function initApp() {
     console.log('🚀 Inicializando Controle de Frequência...');
+    setTimeout(esconderSplashScreen, 2000);
     
     // Configura data atual no cabeçalho
     atualizarDataAtual();
@@ -484,6 +485,12 @@ window.mudarParaAba = mudarParaAba;
  * Inicializa o app quando o DOM estiver carregado
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // Já mostra a splash screen imediatamente
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+        splash.classList.remove('hidden');
+    }
+    
     // Carrega tema salvo
     carregarTemaSalvo();
     
@@ -493,7 +500,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Configura intervalo para verificar atualizações (a cada 1 hora)
     setInterval(verificarAtualizacoes, 60 * 60 * 1000);
 });
-
 /**
  * Lida com erros globais não capturados
  */
@@ -556,6 +562,46 @@ function removerMensagensCarregando() {
         }
     });
 }
+/**
+ * Esconde a splash screen com animação
+ */
+function esconderSplashScreen() {
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+        // Adiciona classe para animação de fade out
+        splash.classList.add('fade-out');
+        
+        // Remove completamente após animação
+        setTimeout(() => {
+            splash.classList.add('hidden');
+            
+            // Remove do DOM após 1 segundo para garantir
+            setTimeout(() => {
+                if (splash.parentNode) {
+                    splash.remove();
+                }
+            }, 1000);
+        }, 500); // Espera meio segundo para a animação
+    }
+}
+
+/**
+ * Fallback: Esconde splash se algo der errado
+ */
+function esconderSplashScreenFallback() {
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+        splash.classList.add('hidden');
+        setTimeout(() => {
+            if (splash.parentNode) {
+                splash.remove();
+            }
+        }, 1000);
+    }
+}
+
+// Fallback de segurança: esconde splash após 5 segundos
+setTimeout(esconderSplashScreenFallback, 5000);
 
 // Executa quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', removerMensagensCarregando);

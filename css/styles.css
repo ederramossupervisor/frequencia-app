@@ -1001,3 +1001,140 @@ select.form-control {
         font-size: 0.9rem;
     }
 }
+/* ============================================
+   ESTILOS PARA HORAS GARRAFAIS
+   ============================================ */
+
+/* Container principal das horas */
+.horas-container {
+    padding: 1.5rem 0;
+    background: linear-gradient(135deg, rgba(85, 107, 47, 0.05) 0%, rgba(248, 252, 245, 0.8) 100%);
+    border-radius: 16px;
+    border: 2px solid rgba(85, 107, 47, 0.1);
+    margin-bottom: 1rem;
+}
+
+/* NÚMEROS GARRAFAIS - GRANDES E EM DESTAQUE */
+.horas-garrafais {
+    font-size: 4.5rem; /* GIGANTE! */
+    font-weight: 900; /* Ultra negrito */
+    color: var(--verde-musgo);
+    line-height: 1;
+    margin: 0.5rem 0;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 20px rgba(85, 107, 47, 0.2);
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Legenda abaixo das horas */
+.horas-legenda {
+    font-size: 1.1rem;
+    color: var(--cinza-escuro);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* Informação adicional */
+.horas-info {
+    background: rgba(85, 107, 47, 0.05);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--verde-musgo);
+}
+
+.horas-info i {
+    color: var(--verde-musgo);
+    margin-right: 8px;
+}
+
+/* ============================================
+   ANIMAÇÃO PARA MUDANÇA DE HORAS
+   ============================================ */
+@keyframes horasPulse {
+    0% {
+        transform: scale(1);
+        color: var(--verde-musgo);
+    }
+    50% {
+        transform: scale(1.03);
+        color: var(--verde-musgo-claro);
+    }
+    100% {
+        transform: scale(1);
+        color: var(--verde-musgo);
+    }
+}
+
+.horas-garrafais.pulse {
+    animation: horasPulse 0.6s ease;
+}
+
+/* ============================================
+   RESPONSIVIDADE DAS HORAS GARRAFAIS
+   ============================================ */
+
+/* Tablet (768px para baixo) */
+@media (max-width: 768px) {
+    .horas-garrafais {
+        font-size: 3.5rem; /* Um pouco menor em tablets */
+    }
+    
+    .horas-legenda {
+        font-size: 1rem;
+    }
+    
+    .horas-container {
+        padding: 1rem 0;
+    }
+}
+
+/* Celular (480px para baixo) */
+@media (max-width: 480px) {
+    .horas-garrafais {
+        font-size: 2.8rem; /* Ainda grande, mas cabe no celular */
+        font-weight: 800;
+    }
+    
+    .horas-legenda {
+        font-size: 0.9rem;
+    }
+    
+    .horas-container {
+        padding: 0.8rem 0;
+        border-radius: 12px;
+    }
+}
+
+/* Telas muito pequenas (360px para baixo) */
+@media (max-width: 360px) {
+    .horas-garrafais {
+        font-size: 2.4rem;
+    }
+    
+    .horas-legenda {
+        font-size: 0.85rem;
+    }
+}
+
+/* ============================================
+   EFEITO HOVER (opcional - apenas em desktop)
+   ============================================ */
+@media (min-width: 769px) {
+    .horas-container:hover {
+        background: linear-gradient(135deg, rgba(85, 107, 47, 0.08) 0%, rgba(248, 252, 245, 0.9) 100%);
+        border-color: rgba(85, 107, 47, 0.2);
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(85, 107, 47, 0.1);
+    }
+    
+    .horas-container:hover .horas-garrafais {
+        text-shadow: 
+            3px 3px 6px rgba(0, 0, 0, 0.15),
+            0 0 25px rgba(85, 107, 47, 0.3);
+    }
+}

@@ -134,32 +134,32 @@ function carregarInterfaceFrequencia() {
                     </div>
                 </div>
                 
-                <!-- Cálculo de Horas -->
+                <!-- Resumo do Dia - VERSÃO SIMPLIFICADA -->
                 <div class="card mt-3">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-calculator"></i>
+                            <i class="fas fa-clock"></i>
                             Resumo do Dia
                         </h3>
                     </div>
                     <div class="card-body">
-                        <div class="grid grid-3 text-center">
-                            <div>
-                                <div class="stat-number" id="horasManha">04:00</div>
-                                <small class="text-muted">Manhã</small>
-                            </div>
-                            <div>
-                                <div class="stat-number" id="horasTarde">04:00</div>
-                                <small class="text-muted">Tarde</small>
-                            </div>
-                            <div>
-                                <div class="stat-number" id="horasTotal">08:00</div>
-                                <small class="text-muted">Total</small>
+                        <div class="horas-container text-center">
+                            <!-- HORAS GARRAFAIS NO CENTRO -->
+                            <div class="horas-garrafais" id="horasTotal">08:00</div>
+                            
+                            <!-- Legenda pequena -->
+                            <div class="horas-legenda">
+                                horas trabalhadas hoje
                             </div>
                         </div>
-                        <small class="text-muted d-block mt-2 text-center">
-                            Considera 1 hora de almoço automaticamente
-                        </small>
+                        
+                        <!-- Informação adicional (opcional) -->
+                        <div class="horas-info mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Inclui 1 hora de almoço automaticamente
+                            </small>
+                        </div>
                     </div>
                 </div>
                 

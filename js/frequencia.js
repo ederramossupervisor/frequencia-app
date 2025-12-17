@@ -312,15 +312,20 @@ function calcularHoras() {
         horasTotal = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
     }
     
-    // Atualiza display
-    const horasManhaEl = document.getElementById('horasManha');
-    const horasTardeEl = document.getElementById('horasTarde');
+    // Atualiza display - APENAS HORAS TOTAIS EM DESTAQUE
     const horasTotalEl = document.getElementById('horasTotal');
     
-    if (horasManhaEl) horasManhaEl.textContent = horasManha;
-    if (horasTardeEl) horasTardeEl.textContent = horasTarde;
-    if (horasTotalEl) horasTotalEl.textContent = horasTotal;
-}
+    if (horasTotalEl) {
+        horasTotalEl.textContent = horasTotal;
+        
+        // Adiciona animação de pulso quando as horas mudam
+        horasTotalEl.classList.add('pulse');
+        
+        // Remove a classe de animação após terminar
+        setTimeout(() => {
+            horasTotalEl.classList.remove('pulse');
+        }, 600); // Tempo da animação (600ms = 0.6 segundos)
+    }
 
 function limparFrequencia() {
     if (confirm('Limpar todos os horários?')) {

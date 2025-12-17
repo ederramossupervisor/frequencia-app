@@ -326,6 +326,7 @@ function calcularHoras() {
             horasTotalEl.classList.remove('pulse');
         }, 600); // Tempo da animação (600ms = 0.6 segundos)
     }
+}
 
 function limparFrequencia() {
     if (confirm('Limpar todos os horários?')) {

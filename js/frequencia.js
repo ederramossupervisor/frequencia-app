@@ -157,7 +157,7 @@ function carregarInterfaceFrequencia() {
                         <div class="horas-info mt-3">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle"></i>
-                                Inclui 1 hora de almoço automaticamente
+                                Horário de almoço já considerado entre os períodos
                             </small>
                         </div>
                     </div>

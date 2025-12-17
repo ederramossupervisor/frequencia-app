@@ -274,7 +274,6 @@ function configurarEventListenersFrequencia() {
         });
     }
 }
-
 function calcularHoras() {
     const entradaManha = document.getElementById('entradaManha')?.value;
     const saidaManha = document.getElementById('saidaManha')?.value;
@@ -285,25 +284,23 @@ function calcularHoras() {
     let horasTarde = "00:00";
     let horasTotal = "00:00";
     
+    // Calcula horas da manhã
     if (entradaManha && saidaManha) {
         horasManha = calcularHorasTrabalhadas(entradaManha, saidaManha, "00:00");
     }
     
+    // Calcula horas da tarde
     if (entradaTarde && saidaTarde) {
         horasTarde = calcularHorasTrabalhadas(entradaTarde, saidaTarde, "00:00");
     }
     
-    // Soma as horas
+    // Soma as horas (SEM DESCONTAR ALMOÇO)
     if (horasManha !== "00:00" || horasTarde !== "00:00") {
         const [h1, m1] = horasManha.split(':').map(Number);
         const [h2, m2] = horasTarde.split(':').map(Number);
         
+        // Soma SIMPLES das horas da manhã + tarde
         let totalMinutos = (h1 * 60 + m1) + (h2 * 60 + m2);
-        
-        // Desconta 1 hora de almoço se tiver ambos períodos
-        if (horasManha !== "00:00" && horasTarde !== "00:00") {
-            totalMinutos -= 60;
-        }
         
         if (totalMinutos < 0) totalMinutos = 0;
         
